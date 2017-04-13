@@ -58,10 +58,10 @@
                                     <input name="file" type="file" multiple="" />
                                 </div>
                             </form> -->
-                            <form class="form-horizontal" role="form" action="" method="POST" enctype="multipart/form-data" >
+                            <form class="form-horizontal" id="upload-form" role="form" action="" method="POST" enctype="multipart/form-data" >
                                 <div class="form-group">
                                     <div class="col-xs-12">
-                                        <input multiple="" type="file" id="id-input-file-3" />
+                                        <input multiple="true" name="images[]" type="file" id="id-input-file-3" />
                                     </div>
                                 </div>
                                 <div class="space-4"></div>
@@ -70,7 +70,7 @@
                                     <label class="col-xs-12" for="form-field-tags">Từ khóa (tìm kiếm)</label>
 
                                     <div class="col-xs-12">
-                                        <input type="text" name="tags" id="form-field-tags" value="Ảnh bìa" placeholder="Enter tags ..." class="form-control" />
+                                        <input type="text" name="keywords" id="form-field-tags" value="Ảnh bìa" placeholder="Nhập vào từ khóa ..." class="form-control" />
                                     </div>
                                 </div>
                                 <div class="form-group">

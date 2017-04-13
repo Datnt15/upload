@@ -14,6 +14,7 @@ class Upload extends CI_Controller {
 		];
 		$this->load->view('upload/upload-header', $data);
 		$this->load->view('upload/sidebar');
+		self::do_upload();
 		$this->load->view('upload/content');
 		$this->load->view('upload/footer');
 	}
@@ -28,6 +29,29 @@ class Upload extends CI_Controller {
 		$this->load->view('upload/sidebar');
 		$this->load->view('upload/search');
 		$this->load->view('upload/footer');
+	}
+
+	public function do_upload(){
+		$keywords = $this->input->post('keywords');
+		if (isset($keywords)) {
+			print_r($this->input->post('keywords'));
+			print_r( self::reArrayFiles( $_FILES['images'] ) );
+		}
+	}
+
+	private function reArrayFiles(&$file_post) {
+
+	    $file_ary = array();
+	    $file_count = count($file_post['name']);
+	    $file_keys = array_keys($file_post);
+
+	    for ($i=0; $i<$file_count; $i++) {
+	        foreach ($file_keys as $key) {
+	            $file_ary[$i][$key] = $file_post[$key][$i];
+	        }
+	    }
+
+	    return $file_ary;
 	}
 
 
