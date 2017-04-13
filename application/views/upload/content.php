@@ -236,36 +236,6 @@
                                                 </table>
                                             </div>
                                             <!-- /Table view -->
-                                            <?php 
-                                            
-                                            
-                                            $config['base_url'] = base_url() . "upload/page/";
-                                            $config['total_rows'] = $num_rows;
-                                            $config['per_page'] = PER_PAGE;
-                                            $config['num_links'] = 3;
-                                            $config['full_tag_open']    = '<ul class="pagination">';
-                                            $config['full_tag_close']   = '</ul>';
-                                            $config['first_link']       = 'Trang đầu';
-                                            $config['last_link']        = 'Trang cuối';
-                                            $config['next_link']        = '<i class="fa fa-chevron-right" aria-hidden="true"></i>';
-                                            $config['next_tag_open']    = '<li>';
-                                            $config['next_tag_close']   = '</li>';
-                                            $config['first_tag_open']   = '<li>';
-                                            $config['last_tag_open']    = '<li>';
-                                            $config['first_tag_close']  = '</li>';
-                                            $config['last_tag_close']   = '</li>';
-                                            $config['prev_link']        = '<i class="fa fa-chevron-left" aria-hidden="true"></i>';
-                                            $config['prev_tag_open']    = '<li>';
-                                            $config['prev_tag_close']   = '</li>';
-                                            $config['cur_tag_open']     = '<li class="active"><a href="#">';
-                                            $config['cur_tag_close']    = '</a></li>';
-                                            $config['num_tag_open']     = '<li>';
-                                            $config['num_tag_close']    = '</li>';
-                                            $config['use_page_numbers'] = TRUE;
-                                            
-                                            $this->pagination->initialize($config);
-                                            
-                                            echo $this->pagination->create_links(); ?>
                                         <?php endif; ?>
                                     </div>
                                 </div>
