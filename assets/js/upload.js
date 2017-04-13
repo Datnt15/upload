@@ -269,21 +269,6 @@ jQuery(function($) {
 		$("#edit-modal").modal('show');
 	});
 
-
-	$("#save_change_image").click(function(){
-		$.post(
-			$('base').attr('href') +"upload/update_image", 
-			{
-				action: 'update_image',
-				image_id : $("#edit_image_id").val(),
-				title : $("#edit_image_title").val(),
-				keys : $("#edit_image_keys").val()
-			}, function() {
-				$("#edit-modal").modal('hide');
-			}
-		);
-	});
-
 	var delete_image = function(id){
 		$.post(
 			$('base').attr('href') +"upload/delete_image", 
@@ -307,7 +292,6 @@ jQuery(function($) {
 				data = JSON.parse(data);
 				$("#edit_image_title").val(data.title);
 				$("#edit_image_url").attr('src',data.url);
-				$("#edit_image_id").val(data.image_id);
 				var $tag_obj = $('#edit_image_keys').data('tag');
 
 				// Bỏ tất cả những từ khóa cũ
@@ -326,7 +310,5 @@ jQuery(function($) {
 			}
 		);
 	}
-
-
 
 });
