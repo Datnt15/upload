@@ -45,7 +45,7 @@ class Upload_model extends CI_Model {
 		return $this->db->select('*')->where($where)->get('keywords', $offset, $limit)->result_array();
 	}
 
-	public function add_images($data){
+	public function add_image($data){
 		return $this->db->insert('images', $data) ? $this->db->insert_id() : 0;
 	}
 

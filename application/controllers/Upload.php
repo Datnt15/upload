@@ -6,7 +6,7 @@ class Upload extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		
+		$this->load->model('Upload_model');
 	}
 
 	public function index(){
@@ -22,13 +22,27 @@ class Upload extends CI_Controller {
 	public function do_upload(){
 		$action = $this->input->post('action');
 		if (isset($action) && $action == 'upload-image') {
-			$keyswords = $this->input->post();
+			$keyswords = $this->input->post('keywords');
 			$images = self::reArrayFiles( $_FILES['images'] );
 			$target_dir = "uploads/";
 			$res = [
 				'type' => 'success',
 				'mes' => ''
 			];
+			$keys = [];
+			$keyswords = explode(',', $keyswords);
+		    foreach ($keyswords as $value) {
+		    	$single_key = $this->Upload_model->get_specifix_keyword(['keyword' => $value]);
+		    	if(!empty($single_key)){
+		    		array_push($keys, $single_key[0]['key_id']);
+		    	}else{
+		    		array_push(
+		    			$keys, 
+		    			$this->Upload_model->add_keyword(['keyword' => $value])
+		    		);
+		    	}
+		    }
+		    $keys = implode(',', $keys);
 			foreach ($images as $image) {
 
 				$target_file = $target_dir . md5(uniqid(rand(), true).time());
@@ -61,10 +75,17 @@ class Upload extends CI_Controller {
 				} else {
 					$image_path = $target_file . "." . $imageFileType;
 				    if (move_uploaded_file($image["tmp_name"], $image_path)) {
+						$this->Upload_model->add_image( [
+							'title' 	=> str_replace(".".$imageFileType, "", $image['name']),
+							'url' 		=> $image_path,
+							'uid' 		=> 1,
+							'keywords' 	=> $keys
+						] );
 				        $res['mes'] .= "The file ". basename( $image["name"]). " has been uploaded.";
 				    } else {
 				        $res['mes'] .= "Sorry, there was an error uploading The file ". basename( $image["name"]);
 				    }
+
 				}
 
 			}
