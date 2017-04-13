@@ -61,8 +61,8 @@
 				<div class="navbar-header pull-left">
 					<a href="index.html" class="navbar-brand">
 						<small>
-							<i class="fa fa-code" aria-hidden="true"></i>
-							Nhóm 15
+							<i class="fa fa-picture-o" aria-hidden="true"></i>
+							Quản lý hình ảnh
 						</small>
 					</a>
 				</div>

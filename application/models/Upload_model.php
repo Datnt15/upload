@@ -43,8 +43,18 @@ class Upload_model extends CI_Model {
 		return $this->db->select('keyword')->where($where)->get('keywords')->result_array();
 	}
 
+	/**
+	 * Thêm thông tin ảnh vào db
+	 * @param [type] $data [description]
+	 */
 	public function add_image($data){
 		return $this->db->insert('images', $data) ? $this->db->insert_id() : 0;
+	}
+
+
+	public function delete_image($where)
+	{
+		return $this->db->where($where)->delete('images');
 	}
 
 
@@ -57,9 +67,7 @@ class Upload_model extends CI_Model {
 	 * EX: $where = ['key_id' => 1]
 	 * @return mảng dữ liệu
 	 */
-	public function get_images($where = 'uid=1', $limit = 0, $offset = 0){
-		$offset = $offset > 0 ? $offset : 0 ;
-		$limit = $limit > 0 ? $limit : 1000 ;
+	public function get_images($where = 'uid=1', $limit = 1, $offset = 0){
 		$res = $this->db->select('*')->where($where)->get('images', $offset, $limit)->result_array();
 		if (count($res)) {
 			foreach ($res as &$img) {

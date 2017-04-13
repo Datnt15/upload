@@ -15963,7 +15963,7 @@ ul.attachment-list>li {
 .search-media {
     border: 1px solid #ddd;
     margin-top: -1px;
-    padding: 12px 150px 12px 12px;
+    padding: 12px 0px 12px 12px;
     -webkit-transition: border .1s ease-in-out 0s;
     -o-transition: border .1s ease-in-out 0s;
     transition: border .1s ease-in-out 0s;
@@ -16041,7 +16041,14 @@ ul.attachment-list>li {
 .search-promotion.label {
     position: absolute;
     margin-top: -1px;
-    margin-left: -1px
+    margin-left: -1px;
+    cursor: pointer;
+}
+
+.search-promotion.label.pull-right{
+    position: absolute;
+    right: 20px;
+    cursor: pointer;
 }
 
 .search-filter-element {

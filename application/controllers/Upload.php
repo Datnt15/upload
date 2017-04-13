@@ -133,6 +133,26 @@ class Upload extends CI_Controller {
 		echo json_encode($res);
 	}
 
+	public function delete_image()
+	{
+		$action = $this->input->post('action');
+		if (isset($action) && $action == 'delete_image') {
+			$where = ['image_id' => $this->input->post('image_id')];
+			$image = $this->Upload_model->get_images($where)[0];
+			unlink($image['url']);
+			$this->Upload_model->delete_image($where);
+		}
+	}
+
+	public function get_image()
+	{
+		$action = $this->input->post('action');
+		if (isset($action) && $action == 'get_image') {
+			$where = ['image_id' => $this->input->post('image_id')];
+			echo json_encode($this->Upload_model->get_images($where)[0]);
+		}
+	}
+
 
 }
 

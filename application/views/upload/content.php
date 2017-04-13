@@ -135,9 +135,10 @@
                                             <!-- Grid View -->
                                             <div class="tab-pane fade active in" id="grid-view">
                                             <?php foreach ($images as $image): ?>
-                                                <div class="col-xs-6 col-sm-4 col-md-3">
+                                                <div class="col-xs-6 col-sm-4 col-md-3 single-image">
                                                     <div class="thumbnail search-thumbnail">
-                                                        <span class="search-promotion label label-success arrowed-in arrowed-in-right">Sponsored</span>
+                                                        <span class="search-promotion label label-warning arrowed-in arrowed-in-right pull-right delete-img" data-img-id="<?= $image['image_id'] ?>">Xóa</span>
+                                                        <span class="search-promotion label label-success arrowed-in arrowed-in-right edit-img" data-img-id="<?= $image['image_id'] ?>">Sửa</span>
 
                                                         <img class="media-object" alt="100%x200" style="height: 200px; width: 100%; display: block;" src="<?= base_url().$image['url'] ?>" data-holder-rendered="true">
                                                         <div class="caption">
@@ -158,7 +159,7 @@
                                             <!-- List view -->
                                             <div class="tab-pane fade" id="list-view">
                                             <?php foreach ($images as $image): ?>
-                                                <div class="col-xs-12">
+                                                <div class="col-xs-12 single-image">
                                                     <div class="media search-media">
                                                         <div class="media-left">
                                                             <a href="#">
@@ -168,9 +169,20 @@
 
                                                         <div class="media-body">
                                                             <div>
-                                                                <h4 class="media-heading">
+                                                                <h4 class="media-heading col-xs-6">
                                                                     <?= $image['title'] ?>
                                                                 </h4>
+                                                                <div class="col-xs-6">
+                                                                    <button class="btn btn-white btn-warning btn-bold pull-right delete-img" data-img-id="<?= $image['image_id'] ?>">
+                                                                        <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+                                                                        Xóa
+                                                                    </button>
+
+                                                                    <button class="btn btn-white btn-info btn-bold pull-right edit-img" data-img-id="<?= $image['image_id'] ?>">
+                                                                        <i class="ace-icon fa fa-pencil-square-o bigger-120 blue"></i>
+                                                                        Sửa
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                             <p>
                                                                 <?php foreach ($image['keywords'] as $key): ?>
@@ -186,7 +198,7 @@
                                             <!-- /List view -->
                                             <!-- Table view -->
                                             <div class="tab-pane fade" id="table-view">
-                                                <table class="table table-striped table-bordered table-hover no-margin-bottom no-border-top col-xs-12">
+                                                <table class="table table-striped table-bordered table-hover no-margin-bottom col-xs-12">
                                                     <thead>
                                                         <tr>
                                                             <th>Ảnh</th>
@@ -197,7 +209,7 @@
                                                     </thead>
                                                     <tbody>
                                                     <?php foreach ($images as $image): ?>
-                                                        <tr>
+                                                        <tr class="single-image">
                                                             <td>
                                                                 <img class="media-object" alt="72x72" style="width: 72px; height: 72px;" src="<?= base_url().$image['url'] ?>" data-holder-rendered="true">  
                                                             </td>
@@ -208,11 +220,11 @@
                                                                 <?php endforeach ?>
                                                             </td>
                                                             <td>
-                                                                <button class="btn btn-white btn-info btn-bold">
+                                                                <button class="btn btn-white btn-info btn-bold edit-img" data-img-id="<?= $image['image_id'] ?>">
                                                                     <i class="ace-icon fa fa-pencil-square-o bigger-120 blue"></i>
                                                                     Sửa
                                                                 </button>
-                                                                <button class="btn btn-white btn-warning btn-bold">
+                                                                <button class="btn btn-white btn-warning btn-bold delete-img" data-img-id="<?= $image['image_id'] ?>">
                                                                     <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
                                                                     Xóa
                                                                 </button>
@@ -220,8 +232,8 @@
                                                         </tr>
                                                         
                                                     <?php endforeach ?>
-                                                </tbody>
-                                            </table>
+                                                    </tbody>
+                                                </table>
                                             </div>
                                             <!-- /Table view -->
                                         <?php endif; ?>
@@ -285,6 +297,43 @@
                         </a>
                     </div>
                 </div>
+
+                <div class="modal fade" id="edit-modal" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                                </button>
+                                <h4 class="modal-title" id="gridSystemModalLabel">Chỉnh sửa ảnh</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="clearfix">
+                                    <div class="col-xs-4">
+                                        <img src="assets/img/image.png" class="img-responsive" id="edit_image_url" alt="">
+                                    </div>
+                                    <div class="col-xs-8">
+                                        <div class="form-group">
+                                            <label for="">Tiêu đề:</label>
+                                            <input type="text" name="edit_image_title" id="edit_image_title" class="form-control">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">Từ khóa:</label>
+                                            <input type="text" name="edit_image_keys" id="edit_image_keys" class="form-control">
+                                        </div>
+                                        <input type="hidden" id="edit_image_id" name="edit_image_id">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-primary">Lưu thay đổi</button>
+                            </div>
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
+                <!-- /.modal -->
                 <!-- /Preview Template for Dropzone -->
             </div>
             <!-- PAGE CONTENT ENDS -->

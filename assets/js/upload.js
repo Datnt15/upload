@@ -107,10 +107,6 @@ jQuery(function($) {
 	// tag input cho phần tìm kiếm
 	var tag_input = $('#search-tags');
 	try{
-		var keywords = [
-			'Beauty', 'Nature', 'Girls', 'Country', 'Ocean', 'School', 'Student', 'Work',
-			'Office', 'Children'
-		];
 		tag_input.tag({
 			placeholder:tag_input.attr('placeholder'),
 			source: function(query, process) {
@@ -128,6 +124,29 @@ jQuery(function($) {
 		//display a textarea for old IE, because it doesn't support this plugin or another one I tried!
 		tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="3">'+tag_input.val()+'</textarea>').remove();
 		autosize($('#search-tags'));
+	}
+
+
+	// tag input cho phần tìm kiếm
+	var tag_input = $('#edit_image_keys');
+	try{
+		tag_input.tag({
+			placeholder:tag_input.attr('placeholder'),
+			source: function(query, process) {
+			  	$.ajax({
+		  			url: $('base').attr('href') +"upload/get_keywords/"+encodeURIComponent(query),
+		  		})
+			  	.done(function(result){
+			  		result = JSON.parse(result);
+			  		process(result);
+			  	});
+			}
+	  	});
+	}
+	catch(e) {
+		//display a textarea for old IE, because it doesn't support this plugin or another one I tried!
+		tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="3">'+tag_input.val()+'</textarea>').remove();
+		autosize($('#edit_image_keys'));
 	}
 
 	// Submit form
@@ -165,7 +184,7 @@ jQuery(function($) {
 				    	}
 				      	for ( ; i < res.data.length; i++ ) {
 					      	file = res.data[i];
-				      		$("#gallery-content .grid-view").append(`
+				      		$("#gallery-content #grid-view").append(`
 				      			<div class="col-xs-6 col-sm-4 col-md-3">
                                     <div class="thumbnail search-thumbnail">
                                         <span class="search-promotion label label-success arrowed-in arrowed-in-right">Sponsored</span>
@@ -182,7 +201,7 @@ jQuery(function($) {
                                     </div>
                                 </div>
 				      			`);
-				      		$("#gallery-content .list-view").append(`
+				      		$("#gallery-content #list-view").append(`
 				      			<div class="col-xs-12">
 					      			<div class="media search-media">
 	                                    <div class="media-left">
@@ -205,7 +224,7 @@ jQuery(function($) {
 	                            </div>
 	                            <div class="space"></div>
 				      			`);
-					      	$("#gallery-content .table-view table tbody").append(`
+					      	$("#gallery-content #table-view table tbody").append(`
 				      			<tr>
                                     <td>
                                         <img class="media-object" alt="72x72" style="width: 72px; height: 72px;" src="`+file.url+`" data-holder-rendered="true">  
@@ -236,5 +255,46 @@ jQuery(function($) {
 		}
 		return false;
 	});
+
+
+	$("#gallery-content").on('click', '.delete-img', function(event) {
+		event.preventDefault();
+		delete_image($(this).attr('data-img-id'));
+		$(this).parents('.single-image').remove();
+	});
+
+	$("#gallery-content").on('click', '.edit-img', function(event) {
+		event.preventDefault();
+		load_image_info($(this).attr('data-img-id'));
+		$("#edit-modal").modal('show');
+	});
+
+	var delete_image = function(id){
+		$.post(
+			$('base').attr('href') +"upload/delete_image", 
+			{
+				action: 'delete_image',
+				image_id : id
+			}, function() {
+
+			}
+		);
+	};
+
+
+	var load_image_info = function(id){
+		$.post(
+			$('base').attr('href') +"upload/get_image", 
+			{
+				action: 'get_image',
+				image_id : id
+			}, function(data) {
+				data = JSON.parse(data);
+				console.log(data.keywords);
+				$("#edit_image_title").val(data.title);
+				$("#edit_image_url").attr('src',data.url);
+			}
+		);
+	}
 
 });
