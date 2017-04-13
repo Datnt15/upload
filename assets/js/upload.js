@@ -243,11 +243,11 @@ jQuery(function($) {
                                     </td>
                                 </tr>
 			      			`);
-			      			$("#myTab a[href='#gallery-area']").click();
-			      			this_form.reset(function(event) {
-			      				
-			      			});
 					    }
+		      			$("#myTab a[href='#gallery-area']").click();
+		      			this_form.reset(function(event) {
+		      				
+		      			});
 				    }
 				});
 				return false;
@@ -267,6 +267,21 @@ jQuery(function($) {
 		event.preventDefault();
 		load_image_info($(this).attr('data-img-id'));
 		$("#edit-modal").modal('show');
+	});
+
+
+	$("#save_change_image").click(function(){
+		$.post(
+			$('base').attr('href') +"upload/update_image", 
+			{
+				action: 'update_image',
+				image_id : $("#edit_image_id").val(),
+				title : $("#edit_image_title").val(),
+				keys : $("#edit_image_keys").val()
+			}, function() {
+				$("#edit-modal").modal('hide');
+			}
+		);
 	});
 
 	var delete_image = function(id){
@@ -292,6 +307,7 @@ jQuery(function($) {
 				data = JSON.parse(data);
 				$("#edit_image_title").val(data.title);
 				$("#edit_image_url").attr('src',data.url);
+				$("#edit_image_id").val(data.image_id);
 				var $tag_obj = $('#edit_image_keys').data('tag');
 
 				// Bỏ tất cả những từ khóa cũ
@@ -310,5 +326,11 @@ jQuery(function($) {
 			}
 		);
 	}
+	// var maxHeight = 0;
+	// $("#gallery-content #grid-view").find('.single-image .thumbnail.search-thumbnail').each(function() {
+	// 	maxHeight = $(this).innerHeight() > maxHeight ? $(this).innerHeight() : maxHeight;
+	// 	console.log(maxHeight);
+	// });
 
+	// $("#grid-view .single-image").height(maxHeight);
 });

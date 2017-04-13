@@ -67,8 +67,8 @@ class Upload_model extends CI_Model {
 	 * EX: $where = ['key_id' => 1]
 	 * @return mảng dữ liệu
 	 */
-	public function get_images($where = 'uid=1', $limit = 1, $offset = 0){
-		$res = $this->db->select('*')->where($where)->get('images', $offset, $limit)->result_array();
+	public function get_images($where = 'uid=1', $offset = 0, $limit = PER_PAGE){
+		$res = $this->db->flush_cache()->select('*')->where($where)->limit($limit, $offset)->get('images')->result_array();
 		if (count($res)) {
 			foreach ($res as &$img) {
 				$img['keywords'] = self::get_keywords('key_id IN ('. $img['keywords'] . ')');
@@ -77,10 +77,18 @@ class Upload_model extends CI_Model {
 		return $res;
 	}
 
+
+	public function count_all_images_available($where){
+		return $this->db->flush_cache()->select('*')->where($where)->get('images')->num_rows();
+	}
+
 	public function get_titles(){
 		return $this->db->select('title')->get('images')->result_array();
 	}
 
+	public function update_image($data, $where){
+		return $this->db->where($where)->update('images', $data);
+	}
 }
 
 /* End of file Upload_model.php */

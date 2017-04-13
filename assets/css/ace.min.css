@@ -22479,3 +22479,6 @@ input.typeahead.scrollable~.tt-menu {
     height: 50px;
     z-index: +10;
 }
+#grid-view .single-image{
+    autoHeight: true;
+}

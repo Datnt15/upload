@@ -7,13 +7,73 @@ class Upload extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('Upload_model');
+		$this->load->library('pagination');
 	}
 
+	// function _remap($param) {
+ //        $this->index($param);
+ //    }
+
 	public function index(){
+		$page = $this->uri->segment(3);
+		
+		$where = "image_id > 0";
 		$data = [
-			'title' => 'Upload Images',
-			'images' => $this->Upload_model->get_images()
+			'title' => 'Upload Images'
 		];
+		if ($page == NULL) {
+			$page = 1;
+		}
+		if ($page != 0 ) {
+			$page = $page <= 0 ? 1 : $page;
+
+		}
+
+		if (isset($_GET['title'])) {
+			$where .= " AND title LIKE '%" . $_GET['title'] . "%'";
+		}
+
+		if (isset($_GET['keys'])) {
+			foreach (explode(',', $_GET['keys']) as $key ) {
+				$where .= " AND keywords LIKE '%" . $key . "%'";
+			}
+		}
+		$data['images'] = $this->Upload_model->get_images($where, 0);
+		$data['num_rows'] = $this->Upload_model->count_all_images_available($where);
+
+		$this->load->view('upload/upload-header', $data);
+		$this->load->view('upload/sidebar');
+		$this->load->view('upload/content');
+		$this->load->view('upload/footer');
+	}
+
+
+	public function page($page = NULL){
+
+		$where = "image_id > 0";
+		$data = [
+			'title' => 'Upload Images'
+		];
+		if ($page == NULL) {
+			$page = 1;
+		}
+		if ($page != 0 ) {
+			$page = $page <= 0 ? 1 : $page;
+
+		}
+
+		if (isset($_GET['title'])) {
+			$where .= " AND title LIKE '%" . $_GET['title'] . "%'";
+		}
+
+		if (isset($_GET['keys'])) {
+			foreach (explode(',', $_GET['keys']) as $key ) {
+				$where .= " AND keywords LIKE '%" . $key . "%'";
+			}
+		}
+		$data['images'] = $this->Upload_model->get_images($where, ($page-1)*PER_PAGE);
+		$data['num_rows'] = $this->Upload_model->count_all_images_available($where);
+
 		$this->load->view('upload/upload-header', $data);
 		$this->load->view('upload/sidebar');
 		$this->load->view('upload/content');
@@ -152,6 +212,34 @@ class Upload extends CI_Controller {
 			echo json_encode($this->Upload_model->get_images($where)[0]);
 		}
 	}
+
+	public function update_image(){
+		$action = $this->input->post('action');
+		if (isset($action) && $action == 'update_image') {
+			$where = ['image_id' => $this->input->post('image_id')];
+			$keyswords = $this->input->post('keys');
+			$keys = [];
+			$keyswords = explode(',', $keyswords);
+		    foreach ($keyswords as $value) {
+		    	$single_key = $this->Upload_model->get_specifix_keyword(['keyword' => trim($value)]);
+		    	if(!empty($single_key)){
+		    		array_push($keys, $single_key[0]['key_id']);
+		    	}else{
+		    		array_push(
+		    			$keys, 
+		    			$this->Upload_model->add_keyword(['keyword' => trim($value)])
+		    		);
+		    	}
+		    }
+		    $keys = implode(',', $keys);
+		    $data = [
+			    'title' => $this->input->post('title'),
+			    'keywords' => $keys
+		    ];
+		    $this->Upload_model->update_image($data, $where);
+		}
+	}
+
 
 
 }
