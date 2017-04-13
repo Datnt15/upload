@@ -10,8 +10,7 @@ class Upload extends CI_Controller {
 
 	public function index(){
 		$data = [
-			'title' => 'Upload Images',
-			'is_upload_page' => true
+			'title' => 'Upload Images'
 		];
 		$this->load->view('upload/upload-header', $data);
 		$this->load->view('upload/sidebar');

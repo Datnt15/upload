@@ -49,13 +49,7 @@
 <!-- ace scripts -->
 <script src="assets/js/ace-elements.min.js"></script>
 <script src="assets/js/ace.min.js"></script>
-<?php if (isset($is_upload_page)): ?>
+<script src="assets/js/jquery-typeahead.js"></script>
 <script src="assets/js/upload.js"></script>
-<?php endif; ?>
-
-
-<?php if (isset($is_search_page)): ?>
-	<script src="assets/js/search.js"></script>
-<?php endif; ?>
 </body>
 </html>

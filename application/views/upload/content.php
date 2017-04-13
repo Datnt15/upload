@@ -30,7 +30,7 @@
                         <li class="active">
                             <a data-toggle="tab" href="#upload-area" aria-expanded="false">
                                 <i class="green ace-icon fa fa-cloud-upload bigger-120"></i>
-                                Tải ảnh lên
+                                Upload
                             </a>
                         </li>
 
@@ -48,7 +48,11 @@
 
                         <!-- Upload Area -->
                         <div id="upload-area" class="tab-pane fade active in">
-                            
+                            <div class="page-header">
+                                <h1>
+                                    Đăng tải hình ảnh cùng từ khóa                                   
+                                </h1>
+                            </div><!-- /.page-header -->
                             <form action="/" class="dropzone well" id="dropzone" enctype="multipart/form-data">
                                 <div class="fallback">
                                     <input name="file" type="file" multiple="" />
@@ -63,7 +67,7 @@
                                 <div class="space-4"></div>
 
                                 <div class="form-group">
-                                    <label class="col-xs-12" for="form-field-tags">Keywords</label>
+                                    <label class="col-xs-12" for="form-field-tags">Từ khóa (tìm kiếm)</label>
 
                                     <div class="col-xs-12">
                                         <input type="text" name="tags" id="form-field-tags" value="Ảnh bìa" placeholder="Enter tags ..." class="form-control" />
@@ -73,12 +77,12 @@
                                     <div class="col-xs-12">
                                         <button class="btn btn-app btn-xs btn-primary no-radius" type="submit">
                                             <i class="ace-icon fa fa-cloud-upload"></i>
-                                            Upload
+                                            Tải lên
                                         </button>
-                                        <button class="btn btn-app btn-xs btn-danger no-radius" type="reset">
+                                        <!-- <button class="btn btn-app btn-xs btn-danger no-radius" type="reset">
                                             <i class="ace-icon fa fa-undo"></i>
                                             Reset
-                                        </button>
+                                        </button> -->
                                     </div>
                                 </div>
                             </form>
@@ -89,8 +93,7 @@
                         <div id="gallery-area" class="tab-pane fade">
                             <div class="page-header">
                                 <h1>
-                                    Search Images
-                                    
+                                    Quản lý hình ảnh                                    
                                 </h1>
                             </div><!-- /.page-header -->
 
@@ -101,13 +104,13 @@
                                             <input type="text" name="title" class="typeahead" placeholder="Title">
                                         </div>
                                         <div class="col-xs-6">
-                                            <input type="text" name="tags" id="form-field-tags" value="" placeholder="Enter tags to search ..."/>
+                                            <input type="text" name="tags" id="search-tags" value="" placeholder="Enter tags to search ..."/>
                                             
                                         </div>
                                     </form>
                                     <div class="search-area col-xs-4">
                                         <div class="pull-right">
-                                            <b class="text-primary">Display</b>
+                                            <b class="text-primary">Hiển thị</b>
 
                                             &nbsp;
                                             <div id="toggle-result-format" class="btn-group btn-overlap" data-toggle="buttons">
