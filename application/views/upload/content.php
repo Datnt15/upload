@@ -100,127 +100,132 @@
                                             
                                         </div>
                                     </form>
-                                    <div class="search-area col-xs-4">
+
+                                </div>
+                                <div class="space"></div>
+                                <div class="tabbable">
+                                    <div class="search-area col-xs-4 pull-right">
                                         <div class="pull-right">
                                             <b class="text-primary">Hiển thị</b>
 
                                             &nbsp;
-                                            <div id="toggle-layout-format" class="btn-group btn-overlap" data-toggle="buttons">
-                                                <label title="Thumbnail view" class="btn btn-lg btn-white btn-success active" data-class="btn-success" aria-pressed="true">
-                                                    <input type="radio" name="view_layout" value="1" autocomplete="off" checked="" />
-                                                    <i class="icon-only ace-icon fa fa-th"></i>
-                                                </label>
-
-                                                <label title="List view" class="btn btn-lg btn-white btn-success" data-class="btn-success">
-                                                    <input type="radio" name="view_layout" value="2" checked="" autocomplete="off" />
-                                                    <i class="icon-only ace-icon fa fa-list"></i>
-                                                </label>
-
-                                                <label title="Table view" class="btn btn-lg btn-white btn-success" data-class="btn-success">
-                                                    <input type="radio" name="view_layout" value="3" checked="" autocomplete="off" />
-                                                    <i class="icon-only ace-icon fa fa-table"></i>
-                                                </label>
+                                            <ul id="toggle-layout-format" class="nav nav-tabs btn-group btn-overlap" data-toggle="buttons">
+                                                <li class="active">
+                                                    <a title="Thumbnail view" class="btn btn-lg btn-white btn-success" data-toggle="tab" href="#grid-view" aria-expanded="false" data-class="btn-success" aria-pressed="true">
+                                                        <i class="icon-only ace-icon fa fa-th"></i>
+                                                    </a>
+                                                    
+                                                </li>
+                                                <li>
+                                                    
+                                                    <a title="List view" class="btn btn-lg btn-white btn-success" data-class="btn-success" data-toggle="tab" href="#list-view" aria-expanded="false">
+                                                        <i class="icon-only ace-icon fa fa-list"></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a title="Table view" class="btn btn-lg btn-white btn-success" data-class="btn-success" data-toggle="tab" href="#table-view" aria-expanded="false">
+                                                        <i class="icon-only ace-icon fa fa-table"></i>
+                                                    </a>
+                                                </li>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="col-xs-12 tab-content no-border" id="gallery-content">
+                                        <?php if(count($images) ): ?>
+                                            <!-- Grid View -->
+                                            <div class="tab-pane fade active in" id="grid-view">
+                                            <?php foreach ($images as $image): ?>
+                                                <div class="col-xs-6 col-sm-4 col-md-3">
+                                                    <div class="thumbnail search-thumbnail">
+                                                        <span class="search-promotion label label-success arrowed-in arrowed-in-right">Sponsored</span>
 
-                                </div>
-                                <div class="space"></div>
-                                <div class="col-xs-12" id="gallery-content">
-                                    <?php if(count($images) ): ?>
-                                        <!-- Grid View -->
-                                        <div class="grid-view view-layout">
-                                        <?php foreach ($images as $image): ?>
-                                            <div class="col-xs-6 col-sm-4 col-md-3">
-                                                <div class="thumbnail search-thumbnail">
-                                                    <span class="search-promotion label label-success arrowed-in arrowed-in-right">Sponsored</span>
-
-                                                    <img class="media-object" alt="100%x200" style="height: 200px; width: 100%; display: block;" src="<?= base_url().$image['url'] ?>" data-holder-rendered="true">
-                                                    <div class="caption">
-                                                        <h3 class="search-title">
-                                                            <?= $image['title'] ?>
-                                                        </h3>
-                                                        <p>
-                                                            <?php foreach ($image['keywords'] as $key): ?>
-                                                                <span type="button" class="btn btn-white btn-yellow btn-sm"><?= $key['keyword'] ?></span>
-                                                            <?php endforeach ?>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <?php endforeach ?>
-                                        </div>
-                                        <!-- /Grid View -->
-                                        <!-- List view -->
-                                        <div class="list-view view-layout hide">
-                                        <?php foreach ($images as $image): ?>
-                                            <div class="col-xs-12">
-                                                <div class="media search-media">
-                                                    <div class="media-left">
-                                                        <a href="#">
-                                                            <img class="media-object" alt="72x72" style="width: 72px; height: 72px;" src="<?= base_url().$image['url'] ?>" data-holder-rendered="true">
-                                                        </a>
-                                                    </div>
-
-                                                    <div class="media-body">
-                                                        <div>
-                                                            <h4 class="media-heading">
+                                                        <img class="media-object" alt="100%x200" style="height: 200px; width: 100%; display: block;" src="<?= base_url().$image['url'] ?>" data-holder-rendered="true">
+                                                        <div class="caption">
+                                                            <h3 class="search-title">
                                                                 <?= $image['title'] ?>
-                                                            </h4>
+                                                            </h3>
+                                                            <p>
+                                                                <?php foreach ($image['keywords'] as $key): ?>
+                                                                    <span type="button" class="btn btn-white btn-yellow btn-sm"><?= $key['keyword'] ?></span>
+                                                                <?php endforeach ?>
+                                                            </p>
                                                         </div>
-                                                        <p>
-                                                            <?php foreach ($image['keywords'] as $key): ?>
-                                                                <span type="button" class="btn btn-white btn-yellow btn-sm"><?= $key['keyword'] ?></span>
-                                                            <?php endforeach ?>
-                                                        </p>
                                                     </div>
                                                 </div>
+                                            <?php endforeach ?>
                                             </div>
-                                            <div class="space"></div>
-                                        <?php endforeach ?>
-                                        </div>
-                                        <!-- /List view -->
-                                        <!-- Table view -->
-                                        <div class="table-view view-layout hide">
-                                            <table class="table table-striped table-bordered table-hover no-margin-bottom no-border-top col-xs-12">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Ảnh</th>
-                                                        <th>Tiêu đề</th>
-                                                        <th>Từ khóa</th>
-                                                        <th>Hành động</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                <?php foreach ($images as $image): ?>
-                                                    <tr>
-                                                        <td>
-                                                            <img class="media-object" alt="72x72" style="width: 72px; height: 72px;" src="<?= base_url().$image['url'] ?>" data-holder-rendered="true">  
-                                                        </td>
-                                                        <td><?= $image['title'] ?></td>
-                                                        <td>
-                                                            <?php foreach ($image['keywords'] as $key): ?>
-                                                                <span type="button" class="btn btn-white btn-yellow btn-sm"><?= $key['keyword'] ?></span>
-                                                            <?php endforeach ?>
-                                                        </td>
-                                                        <td>
-                                                            <button class="btn btn-white btn-info btn-bold">
-                                                                <i class="ace-icon fa fa-pencil-square-o bigger-120 blue"></i>
-                                                                Sửa
-                                                            </button>
-                                                            <button class="btn btn-white btn-warning btn-bold">
-                                                                <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
-                                                                Xóa
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                    
-                                                <?php endforeach ?>
-                                            </tbody>
-                                        </table>
-                                        </div>
-                                        <!-- /Table view -->
-                                    <?php endif; ?>
+                                            <!-- /Grid View -->
+                                            <!-- List view -->
+                                            <div class="tab-pane fade" id="list-view">
+                                            <?php foreach ($images as $image): ?>
+                                                <div class="col-xs-12">
+                                                    <div class="media search-media">
+                                                        <div class="media-left">
+                                                            <a href="#">
+                                                                <img class="media-object" alt="72x72" style="width: 72px; height: 72px;" src="<?= base_url().$image['url'] ?>" data-holder-rendered="true">
+                                                            </a>
+                                                        </div>
+
+                                                        <div class="media-body">
+                                                            <div>
+                                                                <h4 class="media-heading">
+                                                                    <?= $image['title'] ?>
+                                                                </h4>
+                                                            </div>
+                                                            <p>
+                                                                <?php foreach ($image['keywords'] as $key): ?>
+                                                                    <span type="button" class="btn btn-white btn-yellow btn-sm"><?= $key['keyword'] ?></span>
+                                                                <?php endforeach ?>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="space"></div>
+                                            <?php endforeach ?>
+                                            </div>
+                                            <!-- /List view -->
+                                            <!-- Table view -->
+                                            <div class="tab-pane fade" id="table-view">
+                                                <table class="table table-striped table-bordered table-hover no-margin-bottom no-border-top col-xs-12">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Ảnh</th>
+                                                            <th>Tiêu đề</th>
+                                                            <th>Từ khóa</th>
+                                                            <th>Hành động</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <?php foreach ($images as $image): ?>
+                                                        <tr>
+                                                            <td>
+                                                                <img class="media-object" alt="72x72" style="width: 72px; height: 72px;" src="<?= base_url().$image['url'] ?>" data-holder-rendered="true">  
+                                                            </td>
+                                                            <td><?= $image['title'] ?></td>
+                                                            <td>
+                                                                <?php foreach ($image['keywords'] as $key): ?>
+                                                                    <span type="button" class="btn btn-white btn-yellow btn-sm"><?= $key['keyword'] ?></span>
+                                                                <?php endforeach ?>
+                                                            </td>
+                                                            <td>
+                                                                <button class="btn btn-white btn-info btn-bold">
+                                                                    <i class="ace-icon fa fa-pencil-square-o bigger-120 blue"></i>
+                                                                    Sửa
+                                                                </button>
+                                                                <button class="btn btn-white btn-warning btn-bold">
+                                                                    <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+                                                                    Xóa
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        
+                                                    <?php endforeach ?>
+                                                </tbody>
+                                            </table>
+                                            </div>
+                                            <!-- /Table view -->
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
                             </div><!-- /.row -->
                 
