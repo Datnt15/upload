@@ -290,9 +290,23 @@ jQuery(function($) {
 				image_id : id
 			}, function(data) {
 				data = JSON.parse(data);
-				console.log(data.keywords);
 				$("#edit_image_title").val(data.title);
 				$("#edit_image_url").attr('src',data.url);
+				var $tag_obj = $('#edit_image_keys').data('tag');
+
+				// Bỏ tất cả những từ khóa cũ
+				var values = $tag_obj.values;
+				
+				for (var i = values.length - 1; i >= 0; i--) {
+					var index = $tag_obj.inValues(values[i]);
+					$tag_obj.remove(index);
+				}
+
+				// Thêm các từ khóa mới
+				for (var i = 0; i < data.keywords.length; i++) {
+					$tag_obj.add(data.keywords[i].keyword);
+				}
+
 			}
 		);
 	}
