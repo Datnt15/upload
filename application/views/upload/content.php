@@ -126,7 +126,7 @@
 
                                 </div>
                                 <div class="space"></div>
-                                <div class="col-xs-12">
+                                <div class="col-xs-12" id="gallery-content">
                                     <?php if(count($images) ): ?>
                                         <!-- Grid View -->
                                         <div class="grid-view view-layout">

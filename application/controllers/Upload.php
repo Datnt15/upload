@@ -29,7 +29,8 @@ class Upload extends CI_Controller {
 			$target_dir = "uploads/";
 			$res = [
 				'type' => 'success',
-				'mes' => ''
+				'mes' => '',
+				'data' => []
 			];
 			$keys = [];
 			$keyswords = explode(',', $keyswords);
@@ -59,10 +60,6 @@ class Upload extends CI_Controller {
 			    	$res['mes'] .= "The file ". basename( $image["name"]). " is not an image.";
 			        $uploadOk = 0;
 			    }
-				if ($image["size"] > 500000) {
-				    $res['mes'] .= "Sorry, the file ". basename( $image["name"]). " is too large.";
-				    $uploadOk = 0;
-				}
 				// Allow certain file formats
 				if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
 				&& $imageFileType != "gif" ) {
@@ -77,12 +74,14 @@ class Upload extends CI_Controller {
 				} else {
 					$image_path = $target_file . "." . $imageFileType;
 				    if (move_uploaded_file($image["tmp_name"], $image_path)) {
-						$this->Upload_model->add_image( [
+				    	$data = [
 							'title' 	=> str_replace(".".$imageFileType, "", $image['name']),
 							'url' 		=> $image_path,
 							'uid' 		=> 1,
 							'keywords' 	=> $keys
-						] );
+						];
+						$img_id = $this->Upload_model->add_image( $data );
+						array_push($res['data'], $data);
 				        $res['mes'] .= "The file ". basename( $image["name"]). " has been uploaded.";
 				    } else {
 				        $res['mes'] .= "Sorry, there was an error uploading The file ". basename( $image["name"]);

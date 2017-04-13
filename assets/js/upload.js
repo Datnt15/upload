@@ -107,56 +107,48 @@ jQuery(function($) {
 		}
 	};
 
-	$('input.typeahead').typeahead(
-		{
-			hint: true,
-			highlight: true,
-			minLength: 1
-		}, {
-			name: 'states',
-			displayKey: 'value',
-			source: substringMatcher(),
-			limit: 10
-		}
-	).parent('.twitter-typeahead').css('display', 'block');
+	// $('input.typeahead').typeahead(
+	// 	{
+	// 		hint: true,
+	// 		highlight: true,
+	// 		minLength: 1
+	// 	}, {
+	// 		name: 'states',
+	// 		displayKey: 'value',
+	// 		source: substringMatcher(),
+	// 		limit: 10
+	// 	}
+	// ).parent('.twitter-typeahead').css('display', 'block');
 
 	// tag input cho phần tìm kiếm
-	var tag_input = $('#search-tags');
-	try{
-		var keywords = [
-			'Beauty', 'Nature', 'Girls', 'Country', 'Ocean', 'School', 'Student', 'Work',
-			'Office', 'Children'
-		];
-		tag_input.tag({
-			placeholder:tag_input.attr('placeholder'),
-			//enable typeahead by specifying the source array
-			source: keywords,//defined in ace.js >> ace.enable_search_ahead
-			/**
-			//or fetch data from database, fetch those that match "query"
-			source: function(query, process) {
-			  $.ajax({url: 'remote_source.php?q='+encodeURIComponent(query)})
-			  .done(function(result_items){
-				process(result_items);
-			  });
-			}
-			*/
-	  	});
+	// var tag_input = $('#search-tags');
+	// try{
+	// 	var keywords = [
+	// 		'Beauty', 'Nature', 'Girls', 'Country', 'Ocean', 'School', 'Student', 'Work',
+	// 		'Office', 'Children'
+	// 	];
+	// 	tag_input.tag({
+	// 		placeholder:tag_input.attr('placeholder'),
+	// 		//enable typeahead by specifying the source array
+	// 		source: keywords,//defined in ace.js >> ace.enable_search_ahead
+	//   	});
 
-		//programmatically add/remove a tag
-		var $tag_obj = $('#search-tags').data('tag');
-		$tag_obj.add('Beauty');
+	// 	//programmatically add/remove a tag
+	// 	var $tag_obj = $('#search-tags').data('tag');
+	// 	$tag_obj.add('Beauty');
 		
-		var index = $tag_obj.inValues('some tag');
-		$tag_obj.remove(index);
-	}
-	catch(e) {
-		//display a textarea for old IE, because it doesn't support this plugin or another one I tried!
-		tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="3">'+tag_input.val()+'</textarea>').remove();
-		autosize($('#search-tags'));
-	}
+	// 	var index = $tag_obj.inValues('some tag');
+	// 	$tag_obj.remove(index);
+	// }
+	// catch(e) {
+	// 	//display a textarea for old IE, because it doesn't support this plugin or another one I tried!
+	// 	tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="3">'+tag_input.val()+'</textarea>').remove();
+	// 	autosize($('#search-tags'));
+	// }
 
 	// Submit form
 	$("#upload-form").submit(function() {
+		var this_form = $(this);
 		var input = document.getElementById("id-input-file-3"), formdata = false;
     
 		if (window.FormData) {
@@ -180,7 +172,79 @@ jQuery(function($) {
 				    processData: false,
 				    contentType: false,
 				    success: function (res) {
-				      	console.log(res); 
+				    	res = JSON.parse(res);
+				    	i = 0;
+				    	var keywords = $("#form-field-tags").val().split(",");
+				    	var keys = '';
+				    	for (var j = 0; j < keywords.length; j++) {
+				    		keys += `<span type="button" class="btn btn-white btn-yellow btn-sm">`+keywords[j]+`</span>`;
+				    	}
+				      	for ( ; i < res.data.length; i++ ) {
+					      	file = res.data[i];
+				      		$("#gallery-content .grid-view").append(`
+				      			<div class="col-xs-6 col-sm-4 col-md-3">
+                                    <div class="thumbnail search-thumbnail">
+                                        <span class="search-promotion label label-success arrowed-in arrowed-in-right">Sponsored</span>
+
+                                        <img class="media-object" alt="100%x200" style="height: 200px; width: 100%; display: block;" src="`+file.url+`" data-holder-rendered="true">
+                                        <div class="caption">
+                                            <h3 class="search-title">
+                                                `+file.title+`
+                                            </h3>
+                                            <p>
+                                                `+keys+`
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+				      			`);
+				      		$("#gallery-content .list-view").append(`
+				      			<div class="col-xs-12">
+					      			<div class="media search-media">
+	                                    <div class="media-left">
+	                                        <a href="#">
+	                                            <img class="media-object" alt="72x72" style="width: 72px; height: 72px;" src="`+file.url+`" data-holder-rendered="true">
+	                                        </a>
+	                                    </div>
+
+	                                    <div class="media-body">
+	                                        <div>
+	                                            <h4 class="media-heading">
+	                                                `+file.title+`
+	                                            </h4>
+	                                        </div>
+	                                        <p>
+	                                            `+keys+`
+	                                        </p>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <div class="space"></div>
+				      			`);
+					      	$("#gallery-content .table-view table tbody").append(`
+				      			<tr>
+                                    <td>
+                                        <img class="media-object" alt="72x72" style="width: 72px; height: 72px;" src="`+file.url+`" data-holder-rendered="true">  
+                                    </td>
+                                    <td>`+file.title+`</td>
+                                    <td>`+keys+`</td>
+                                    <td>
+                                        <button class="btn btn-white btn-info btn-bold">
+                                            <i class="ace-icon fa fa-pencil-square-o bigger-120 blue"></i>
+                                            Sửa
+                                        </button>
+                                        <button class="btn btn-white btn-warning btn-bold">
+                                            <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+                                            Xóa
+                                        </button>
+                                    </td>
+                                </tr>
+			      			`);
+			      			$("#myTab a[href='#gallery-area']").click();
+			      			this_form.reset(function(event) {
+			      				
+			      			});
+					    }
 				    }
 				});
 				return false;
