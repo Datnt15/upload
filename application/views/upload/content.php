@@ -53,11 +53,11 @@
                                     Đăng tải hình ảnh cùng từ khóa                                   
                                 </h1>
                             </div><!-- /.page-header -->
-                            <form action="/" class="dropzone well" id="dropzone" enctype="multipart/form-data">
+                           <!--  <form action="/" class="dropzone well" id="dropzone" enctype="multipart/form-data">
                                 <div class="fallback">
                                     <input name="file" type="file" multiple="" />
                                 </div>
-                            </form>
+                            </form> -->
                             <form class="form-horizontal" role="form" action="" method="POST" enctype="multipart/form-data" >
                                 <div class="form-group">
                                     <div class="col-xs-12">
