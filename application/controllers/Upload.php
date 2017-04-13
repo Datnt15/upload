@@ -6,6 +6,7 @@ class Upload extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		
 	}
 
 	public function index(){
@@ -14,28 +15,60 @@ class Upload extends CI_Controller {
 		];
 		$this->load->view('upload/upload-header', $data);
 		$this->load->view('upload/sidebar');
-		self::do_upload();
 		$this->load->view('upload/content');
 		$this->load->view('upload/footer');
 	}
 
-
-	public function search_image($page = 1){
-		$data = [
-			'title' => 'Searching Images',
-			'is_search_page' => true
-		];
-		$this->load->view('upload/upload-header', $data);
-		$this->load->view('upload/sidebar');
-		$this->load->view('upload/search');
-		$this->load->view('upload/footer');
-	}
-
 	public function do_upload(){
-		$keywords = $this->input->post('keywords');
-		if (isset($keywords)) {
-			print_r($this->input->post('keywords'));
-			print_r( self::reArrayFiles( $_FILES['images'] ) );
+		$action = $this->input->post('action');
+		if (isset($action) && $action == 'upload-image') {
+			$keyswords = $this->input->post();
+			$images = self::reArrayFiles( $_FILES['images'] );
+			$target_dir = "uploads/";
+			$res = [
+				'type' => 'success',
+				'mes' => ''
+			];
+			foreach ($images as $image) {
+
+				$target_file = $target_dir . md5(uniqid(rand(), true).time());
+
+				$uploadOk = 1;
+				$imageFileType = pathinfo($image['name'],PATHINFO_EXTENSION);
+				// Check if image file is a actual image or fake image
+			    $check = getimagesize($image["tmp_name"]);
+			    if($check !== false) {
+			        $uploadOk = 1;
+			    } else {
+			    	$res['mes'] .= "The file ". basename( $image["name"]). " is not an image.";
+			        $uploadOk = 0;
+			    }
+				if ($image["size"] > 500000) {
+				    $res['mes'] .= "Sorry, the file ". basename( $image["name"]). " is too large.";
+				    $uploadOk = 0;
+				}
+				// Allow certain file formats
+				if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+				&& $imageFileType != "gif" ) {
+				    $res['mes'] .= "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+				    $uploadOk = 0;
+				}
+
+				// Check if $uploadOk is set to 0 by an error
+				if ($uploadOk == 0) {
+				    $res['mes'] .= "Sorry, the file ". basename( $image["name"]). " was not uploaded.";
+				// if everything is ok, try to upload file
+				} else {
+					$image_path = $target_file . "." . $imageFileType;
+				    if (move_uploaded_file($image["tmp_name"], $image_path)) {
+				        $res['mes'] .= "The file ". basename( $image["name"]). " has been uploaded.";
+				    } else {
+				        $res['mes'] .= "Sorry, there was an error uploading The file ". basename( $image["name"]);
+				    }
+				}
+
+			}
+			echo json_encode($res);
 		}
 	}
 

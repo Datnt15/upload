@@ -155,9 +155,37 @@ jQuery(function($) {
 		autosize($('#search-tags'));
 	}
 
+	// Submit form
 	$("#upload-form").submit(function() {
-		var data = $('#upload-form').serializeArray();
-		console.log(data);
+		var input = document.getElementById("id-input-file-3"), formdata = false;
+    
+		if (window.FormData) {
+		    formdata = new FormData();
+			var i = 0, len = input.files.length, file;
+		    formdata.append("action", "upload-image");
+		    formdata.append("keywords", $("#form-field-tags").val());
+		    for ( ; i < len; i++ ) {
+		      	file = input.files[i];
+		      	if (!!file.type.match(/image.*/)) {
+		      		if (formdata) {
+					  	formdata.append("images[]", file);
+					}
+		      	} 
+		    }
+		    if (formdata) {
+		  		$.ajax({
+				    url: $('base').attr('href') +"upload/do_upload",
+				    type: "POST",
+				    data: formdata,
+				    processData: false,
+				    contentType: false,
+				    success: function (res) {
+				      	console.log(res); 
+				    }
+				});
+				return false;
+			}
+		}
 		return false;
 	});
 });
