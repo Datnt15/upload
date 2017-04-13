@@ -13,26 +13,7 @@
 			</li>
 
 			<li class="">
-				<a href="student">
-					<i class="menu-icon fa fa-address-card-o"></i>
-					<span class="menu-text">
-						CV
-					</span>
-				</a>
-				<b class="arrow"></b>
-			</li>
-
-			<li class="">
-				<a href="student/view_mark">
-					<i class="menu-icon fa fa-list-alt"></i>
-					<span class="menu-text"> Xem điểm </span>
-				</a>
-
-				<b class="arrow"></b>
-			</li>
-
-			<li class="">
-				<a href="student/view_task">
+				<a href="user/view_task">
 					<i class="menu-icon fa fa-tasks"></i>
 					<span class="menu-text"> Công việc </span>
 				</a>
@@ -41,7 +22,7 @@
 			</li>
 
 			<li class="">
-				<a href="student/view_noti">
+				<a href="user/view_noti">
 					<i class="menu-icon fa fa-bell-o"></i>
 					<span class="menu-text"> Thông báo </span>
 				</a>
@@ -50,30 +31,7 @@
 			</li>
 
 			<li class="">
-				<a href="student/view_topic">
-					<i class="menu-icon fa fa-calendar-o"></i>
-
-					<span class="menu-text">
-						Xem topic
-					</span>
-				</a>
-
-				<b class="arrow"></b>
-			</li>
-
-			<li class="">
-				<a href="student/add_aspiration">
-					<i class="menu-icon fa fa-check-square-o"></i>
-					<span class="menu-text"> 
-						Đăng ký nguyện vọng
-					</span>
-				</a>
-
-				<b class="arrow"></b>
-			</li>
-
-			<li class="">
-				<a href="student/add_complaint">
+				<a href="user/add_complaint">
 					<i class="menu-icon fa fa-gavel"></i>
 					<span class="menu-text"> 
 						Gửi khiếu nại
@@ -84,7 +42,7 @@
 			</li>
 
 			<li class="">
-				<a href="student/add_rate">
+				<a href="user/add_rate">
 					<i class="menu-icon fa fa-rss-square"></i>
 					<span class="menu-text"> 
 						Gửi đánh giá
