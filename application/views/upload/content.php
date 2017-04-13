@@ -66,7 +66,7 @@
                                     <label class="col-xs-12" for="form-field-tags">Từ khóa (tìm kiếm)</label>
 
                                     <div class="col-xs-12">
-                                        <input type="text" name="keywords" id="form-field-tags" value="Ảnh bìa" placeholder="Nhập vào từ khóa ..." class="form-control" />
+                                        <input type="text" name="keywords" id="form-field-tags" value="" placeholder="Nhập vào từ khóa ..." class="form-control" required="" />
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -91,7 +91,7 @@
 
                             <div class="row">
                                 <div class="col-xs-12 well">
-                                    <!-- <form class="form-inline col-xs-8" action="" method="POST" id="filter-form" >
+                                    <form class="form-inline col-xs-8" action="" method="POST" id="filter-form" >
                                         <div class="col-xs-6">
                                             <input type="text" name="title" class="typeahead" placeholder="Title">
                                         </div>
@@ -99,7 +99,7 @@
                                             <input type="text" name="tags" id="search-tags" value="" placeholder="Enter tags to search ..."/>
                                             
                                         </div>
-                                    </form> -->
+                                    </form>
                                     <div class="search-area col-xs-4">
                                         <div class="pull-right">
                                             <b class="text-primary">Hiển thị</b>

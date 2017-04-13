@@ -40,7 +40,7 @@ class Upload_model extends CI_Model {
 	 * @return mảng dữ liệu
 	 */
 	public function get_keywords($where){
-		return $this->db->select('*')->where($where)->get('keywords')->result_array();
+		return $this->db->select('keyword')->where($where)->get('keywords')->result_array();
 	}
 
 	public function add_image($data){
@@ -67,7 +67,10 @@ class Upload_model extends CI_Model {
 			}
 		}
 		return $res;
+	}
 
+	public function get_titles(){
+		return $this->db->select('title')->get('images')->result_array();
 	}
 
 }

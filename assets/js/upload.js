@@ -35,31 +35,23 @@ jQuery(function($) {
 	// Tag input cho phần upload
 	var tag_input = $('#form-field-tags');
 	try{
-		var keywords = [
-			'Beauty', 'Nature', 'Girls', 'Country', 'Ocean', 'School', 'Student', 'Work',
-			'Office', 'Children'
-		];
 		tag_input.tag({
 			placeholder:tag_input.attr('placeholder'),
 			//enable typeahead by specifying the source array
-			source: keywords,//defined in ace.js >> ace.enable_search_ahead
-			/**
+			// source: keywords,//defined in ace.js >> ace.enable_search_ahead
+			
 			//or fetch data from database, fetch those that match "query"
 			source: function(query, process) {
-			  $.ajax({url: 'remote_source.php?q='+encodeURIComponent(query)})
-			  .done(function(result_items){
-				process(result_items);
-			  });
+			  	$.ajax({
+		  			url: $('base').attr('href') +"upload/get_keywords/"+encodeURIComponent(query),
+		  		})
+			  	.done(function(result){
+			  		result = JSON.parse(result);
+			  		process(result);
+			  	});
 			}
-			*/
+			
 	  	})
-
-		//programmatically add/remove a tag
-		var $tag_obj = $('#form-field-tags').data('tag');
-		$tag_obj.add('Nhập từ khóa vào đây');
-		
-		var index = $tag_obj.inValues('some tag');
-		$tag_obj.remove(index);
 	}
 	catch(e) {
 		//display a textarea for old IE, because it doesn't support this plugin or another one I tried!
@@ -70,20 +62,13 @@ jQuery(function($) {
 	//typeahead.js
 	//example taken from plugin's page at: https://twitter.github.io/typeahead.js/examples/
 	var substringMatcher = function() {
-		var strs = [
-			'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-			'Lorem Ipsum has been the industry',
-			'Standard dummy text ever since the 1500s', 
-			'when an unknown printer took a galley of type and scrambled',
-			'It to make a type specimen book. ',
-			'It has survived not only five centuries ',
-			'But also the leap into electronic typesetting',
-			'Remaining essentially unchanged. ',
-			'It was popularised in the 1960s with the release of ',
-			'Letraset sheets containing Lorem Ipsum passages, ',
-			'And more recently with desktop publishing software like ',
-			'Aldus PageMaker including versions of Lorem Ipsum'
-		];
+		var strs = [];
+		$.ajax({
+  			url: $('base').attr('href') +"upload/get_titles/",
+  		})
+	  	.done(function(result){
+	  		strs = JSON.parse(result);
+	  	});
 		return function findMatches(q, cb) {
 			var matches, substringRegex;
 		 
@@ -107,44 +92,43 @@ jQuery(function($) {
 		}
 	};
 
-	// $('input.typeahead').typeahead(
-	// 	{
-	// 		hint: true,
-	// 		highlight: true,
-	// 		minLength: 1
-	// 	}, {
-	// 		name: 'states',
-	// 		displayKey: 'value',
-	// 		source: substringMatcher(),
-	// 		limit: 10
-	// 	}
-	// ).parent('.twitter-typeahead').css('display', 'block');
+	$('input.typeahead').typeahead(
+		{
+			hint: true,
+			highlight: true,
+			minLength: 1
+		}, {
+			displayKey: 'value',
+			source: substringMatcher(),
+			limit: 10
+		}
+	).parent('.twitter-typeahead').css('display', 'block');
 
 	// tag input cho phần tìm kiếm
-	// var tag_input = $('#search-tags');
-	// try{
-	// 	var keywords = [
-	// 		'Beauty', 'Nature', 'Girls', 'Country', 'Ocean', 'School', 'Student', 'Work',
-	// 		'Office', 'Children'
-	// 	];
-	// 	tag_input.tag({
-	// 		placeholder:tag_input.attr('placeholder'),
-	// 		//enable typeahead by specifying the source array
-	// 		source: keywords,//defined in ace.js >> ace.enable_search_ahead
-	//   	});
-
-	// 	//programmatically add/remove a tag
-	// 	var $tag_obj = $('#search-tags').data('tag');
-	// 	$tag_obj.add('Beauty');
-		
-	// 	var index = $tag_obj.inValues('some tag');
-	// 	$tag_obj.remove(index);
-	// }
-	// catch(e) {
-	// 	//display a textarea for old IE, because it doesn't support this plugin or another one I tried!
-	// 	tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="3">'+tag_input.val()+'</textarea>').remove();
-	// 	autosize($('#search-tags'));
-	// }
+	var tag_input = $('#search-tags');
+	try{
+		var keywords = [
+			'Beauty', 'Nature', 'Girls', 'Country', 'Ocean', 'School', 'Student', 'Work',
+			'Office', 'Children'
+		];
+		tag_input.tag({
+			placeholder:tag_input.attr('placeholder'),
+			source: function(query, process) {
+			  	$.ajax({
+		  			url: $('base').attr('href') +"upload/get_keywords/"+encodeURIComponent(query),
+		  		})
+			  	.done(function(result){
+			  		result = JSON.parse(result);
+			  		process(result);
+			  	});
+			}
+	  	});
+	}
+	catch(e) {
+		//display a textarea for old IE, because it doesn't support this plugin or another one I tried!
+		tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="3">'+tag_input.val()+'</textarea>').remove();
+		autosize($('#search-tags'));
+	}
 
 	// Submit form
 	$("#upload-form").submit(function() {

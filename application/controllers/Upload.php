@@ -110,6 +110,30 @@ class Upload extends CI_Controller {
 	}
 
 
+	public function get_keywords($key){
+		$keys = $this->Upload_model->get_keywords("keyword LIKE '%".$key."%'");
+		$res = [];
+		if (count($keys)) {
+			foreach ($keys as $key) {
+				array_push($res, $key['keyword']);
+			}
+		}
+		echo json_encode($res);
+	}
+
+
+	public function get_titles(){
+		$keys = $this->Upload_model->get_titles();
+		$res = [];
+		if (count($keys)) {
+			foreach ($keys as $key) {
+				array_push($res, $key['title']);
+			}
+		}
+		echo json_encode($res);
+	}
+
+
 }
 
 /* End of file Upload.php */
