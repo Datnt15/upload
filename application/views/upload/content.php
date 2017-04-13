@@ -25,6 +25,7 @@
             <!-- PAGE CONTENT BEGINS -->
             <div class="page-content">
                 <div class="tabbable">
+                    <!-- Tab header -->
                     <ul class="nav nav-tabs" id="myTab">
                         <li class="active">
                             <a data-toggle="tab" href="#upload-area" aria-expanded="false">
@@ -40,51 +41,113 @@
                             </a>
                         </li>
                     </ul>
-
+                    <!-- / tab header -->
+    
+                    <!-- Tab content -->
                     <div class="tab-content">
+
+                        <!-- Upload Area -->
                         <div id="upload-area" class="tab-pane fade active in">
-                            <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
-                        </div>
+                            
+                            <form action="/" class="dropzone well" id="dropzone" enctype="multipart/form-data">
+                                <div class="fallback">
+                                    <input name="file" type="file" multiple="" />
+                                </div>
+                            </form>
+                            <form class="form-horizontal" role="form" action="" method="POST" enctype="multipart/form-data" >
+                                <div class="form-group">
+                                    <div class="col-xs-12">
+                                        <input multiple="" type="file" id="id-input-file-3" />
+                                    </div>
+                                </div>
+                                <div class="space-4"></div>
 
+                                <div class="form-group">
+                                    <label class="col-xs-12" for="form-field-tags">Keywords</label>
+
+                                    <div class="col-xs-12">
+                                        <input type="text" name="tags" id="form-field-tags" value="Ảnh bìa" placeholder="Enter tags ..." class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-xs-12">
+                                        <button class="btn btn-app btn-xs btn-primary no-radius" type="submit">
+                                            <i class="ace-icon fa fa-cloud-upload"></i>
+                                            Upload
+                                        </button>
+                                        <button class="btn btn-app btn-xs btn-danger no-radius" type="reset">
+                                            <i class="ace-icon fa fa-undo"></i>
+                                            Reset
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /Upload Area -->
+                        
+                        <!-- Gallery -->
                         <div id="gallery-area" class="tab-pane fade">
-                            <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid.</p>
+                            <div class="page-header">
+                                <h1>
+                                    Search Images
+                                    
+                                </h1>
+                            </div><!-- /.page-header -->
+
+                            <div class="row">
+                                <div class="col-xs-12 well">
+                                    <form class="form-inline col-xs-8" action="" method="POST" id="filter-form" >
+                                        <div class="col-xs-6">
+                                            <input type="text" name="title" class="typeahead" placeholder="Title">
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <input type="text" name="tags" id="form-field-tags" value="" placeholder="Enter tags to search ..."/>
+                                            
+                                        </div>
+                                    </form>
+                                    <div class="search-area col-xs-4">
+                                        <div class="pull-right">
+                                            <b class="text-primary">Display</b>
+
+                                            &nbsp;
+                                            <div id="toggle-result-format" class="btn-group btn-overlap" data-toggle="buttons">
+                                                <label title="Thumbnail view" class="btn btn-lg btn-white btn-success active" data-class="btn-success" aria-pressed="true">
+                                                    <input type="radio" value="2" autocomplete="off" />
+                                                    <i class="icon-only ace-icon fa fa-th"></i>
+                                                </label>
+
+                                                <label title="List view" class="btn btn-lg btn-white btn-success" data-class="btn-success">
+                                                    <input type="radio" value="1" checked="" autocomplete="off" />
+                                                    <i class="icon-only ace-icon fa fa-list"></i>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="space"></div>
+                                <div class="col-xs-12">
+                                    <div class="col-xs-3 col-sm-3 col-xs-6 col-md-3 grid-view">
+                                        <div class="img-thumb">
+                                            <img src="assets/img/image.png" class="img-responsive" alt="">
+                                        </div>
+                                        <div class="img-info">
+                                            <h3>Image title go here</h3>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /.row -->
+                
                         </div>
+                        <!-- Gallery -->
+
                     </div>
+                    <!-- /Tab content -->
+
                 </div>
-                <form action="/" class="dropzone well" id="dropzone" enctype="multipart/form-data">
-                    <div class="fallback">
-                        <input name="file" type="file" multiple="" />
-                    </div>
-                </form>
-                <form class="form-horizontal" role="form" action="" method="POST" enctype="multipart/form-data" >
-                    <div class="form-group">
-                        <div class="col-xs-12">
-                            <input multiple="" type="file" id="id-input-file-3" />
-                        </div>
-                    </div>
-                    <div class="space-4"></div>
-
-                    <div class="form-group">
-                        <label class="col-xs-12" for="form-field-tags">Keywords</label>
-
-                        <div class="col-xs-12">
-                            <input type="text" name="tags" id="form-field-tags" value="Ảnh bìa" placeholder="Enter tags ..." class="form-control" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-xs-12">
-                            <button class="btn btn-app btn-xs btn-primary no-radius" type="submit">
-                                <i class="ace-icon fa fa-cloud-upload"></i>
-                                Upload
-                            </button>
-                            <button class="btn btn-app btn-xs btn-danger no-radius" type="reset">
-                                <i class="ace-icon fa fa-undo"></i>
-                                Reset
-                            </button>
-                        </div>
-                    </div>
-                </form>
-                                
+                
+                <!-- Preview Template for Dropzone -->
                 <div id="preview-template" class="hide">
                     <div class="dz-preview dz-file-preview">
                         <div class="dz-image">
@@ -132,6 +195,7 @@
                         </a>
                     </div>
                 </div>
+                <!-- /Preview Template for Dropzone -->
             </div>
             <!-- PAGE CONTENT ENDS -->
         </div><!-- /.col -->
