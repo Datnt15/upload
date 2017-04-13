@@ -326,7 +326,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                                <button type="button" class="btn btn-primary">Lưu thay đổi</button>
+                                <button type="button" class="btn btn-primary" id="save_change_image">Lưu thay đổi</button>
                             </div>
                         </div>
                         <!-- /.modal-content -->

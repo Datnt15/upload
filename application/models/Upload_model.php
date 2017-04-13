@@ -81,6 +81,9 @@ class Upload_model extends CI_Model {
 		return $this->db->select('title')->get('images')->result_array();
 	}
 
+	public function update_image($data, $where){
+		return $this->db->where($where)->update('images', $data);
+	}
 }
 
 /* End of file Upload_model.php */

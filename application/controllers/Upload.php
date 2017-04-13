@@ -35,13 +35,13 @@ class Upload extends CI_Controller {
 			$keys = [];
 			$keyswords = explode(',', $keyswords);
 		    foreach ($keyswords as $value) {
-		    	$single_key = $this->Upload_model->get_specifix_keyword(['keyword' => $value]);
+		    	$single_key = $this->Upload_model->get_specifix_keyword(['keyword' => trim($value)]);
 		    	if(!empty($single_key)){
 		    		array_push($keys, $single_key[0]['key_id']);
 		    	}else{
 		    		array_push(
 		    			$keys, 
-		    			$this->Upload_model->add_keyword(['keyword' => $value])
+		    			$this->Upload_model->add_keyword(['keyword' => trim($value)])
 		    		);
 		    	}
 		    }
@@ -150,6 +150,33 @@ class Upload extends CI_Controller {
 		if (isset($action) && $action == 'get_image') {
 			$where = ['image_id' => $this->input->post('image_id')];
 			echo json_encode($this->Upload_model->get_images($where)[0]);
+		}
+	}
+
+	public function update_image(){
+		$action = $this->input->post('action');
+		if (isset($action) && $action == 'update_image') {
+			$where = ['image_id' => $this->input->post('image_id')];
+			$keyswords = $this->input->post('keys');
+			$keys = [];
+			$keyswords = explode(',', $keyswords);
+		    foreach ($keyswords as $value) {
+		    	$single_key = $this->Upload_model->get_specifix_keyword(['keyword' => trim($value)]);
+		    	if(!empty($single_key)){
+		    		array_push($keys, $single_key[0]['key_id']);
+		    	}else{
+		    		array_push(
+		    			$keys, 
+		    			$this->Upload_model->add_keyword(['keyword' => trim($value)])
+		    		);
+		    	}
+		    }
+		    $keys = implode(',', $keys);
+		    $data = [
+			    'title' => $this->input->post('title'),
+			    'keywords' => $keys
+		    ];
+		    $this->Upload_model->update_image($data, $where);
 		}
 	}
 
