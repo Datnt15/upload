@@ -39,14 +39,35 @@ class Upload_model extends CI_Model {
 	 * EX: $where = ['key_id' => 1]
 	 * @return mảng dữ liệu
 	 */
-	public function get_keywords($where, $limit = 0, $offset = 0){
-		$offset = $offset > 0 ? $offset : 0 ;
-		$limit = $limit > 0 ? $limit : 1000 ;
-		return $this->db->select('*')->where($where)->get('keywords', $offset, $limit)->result_array();
+	public function get_keywords($where){
+		return $this->db->select('*')->where($where)->get('keywords')->result_array();
 	}
 
 	public function add_image($data){
 		return $this->db->insert('images', $data) ? $this->db->insert_id() : 0;
+	}
+
+
+
+	/**
+	 * Lấy thông tin cụ thể của nhiều ảnh
+	 * @param [array|srting] $where [Điều kiện để lấy thông tin]
+	 * @param [int] $limit [số bản ghi sẽ lấy]
+	 * @param [int] $offset [bắt đầu lấy từ bản ghi số ...]
+	 * EX: $where = ['key_id' => 1]
+	 * @return mảng dữ liệu
+	 */
+	public function get_images($where = 'uid=1', $limit = 0, $offset = 0){
+		$offset = $offset > 0 ? $offset : 0 ;
+		$limit = $limit > 0 ? $limit : 1000 ;
+		$res = $this->db->select('*')->where($where)->get('images', $offset, $limit)->result_array();
+		if (count($res)) {
+			foreach ($res as &$img) {
+				$img['keywords'] = self::get_keywords('key_id IN ('. $img['keywords'] . ')');
+			}
+		}
+		return $res;
+
 	}
 
 }

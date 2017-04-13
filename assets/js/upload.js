@@ -188,4 +188,23 @@ jQuery(function($) {
 		}
 		return false;
 	});
+	$('#toggle-layout-format').on('click', function(ev){
+		var target = $('input', ev.target);
+		var which = parseInt(target.val());
+		var layout = '';
+		switch(which){
+			case 1:
+				layout = 'grid-view';
+				break;
+			case 2:
+				layout = 'list-view';
+				break;
+			case 3:
+				layout = 'table-view';
+				break;
+		}
+		$(".view-layout").addClass('hide');
+		$("."+layout).toggleClass('hide');
+	});
+
 });

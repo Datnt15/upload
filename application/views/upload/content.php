@@ -53,15 +53,11 @@
                                     Đăng tải hình ảnh cùng từ khóa                                   
                                 </h1>
                             </div><!-- /.page-header -->
-                           <!--  <form action="/" class="dropzone well" id="dropzone" enctype="multipart/form-data">
-                                <div class="fallback">
-                                    <input name="file" type="file" multiple="" />
-                                </div>
-                            </form> -->
+                           
                             <form class="form-horizontal" id="upload-form" role="form" action="" method="POST" enctype="multipart/form-data" >
                                 <div class="form-group">
                                     <div class="col-xs-12">
-                                        <input multiple="true" name="images[]" type="file" id="id-input-file-3" />
+                                        <input multiple="true" name="images[]" type="file" id="id-input-file-3" required="" />
                                     </div>
                                 </div>
                                 <div class="space-4"></div>
@@ -79,10 +75,6 @@
                                             <i class="ace-icon fa fa-cloud-upload"></i>
                                             Tải lên
                                         </button>
-                                        <!-- <button class="btn btn-app btn-xs btn-danger no-radius" type="reset">
-                                            <i class="ace-icon fa fa-undo"></i>
-                                            Reset
-                                        </button> -->
                                     </div>
                                 </div>
                             </form>
@@ -99,7 +91,7 @@
 
                             <div class="row">
                                 <div class="col-xs-12 well">
-                                    <form class="form-inline col-xs-8" action="" method="POST" id="filter-form" >
+                                    <!-- <form class="form-inline col-xs-8" action="" method="POST" id="filter-form" >
                                         <div class="col-xs-6">
                                             <input type="text" name="title" class="typeahead" placeholder="Title">
                                         </div>
@@ -107,21 +99,26 @@
                                             <input type="text" name="tags" id="search-tags" value="" placeholder="Enter tags to search ..."/>
                                             
                                         </div>
-                                    </form>
+                                    </form> -->
                                     <div class="search-area col-xs-4">
                                         <div class="pull-right">
                                             <b class="text-primary">Hiển thị</b>
 
                                             &nbsp;
-                                            <div id="toggle-result-format" class="btn-group btn-overlap" data-toggle="buttons">
+                                            <div id="toggle-layout-format" class="btn-group btn-overlap" data-toggle="buttons">
                                                 <label title="Thumbnail view" class="btn btn-lg btn-white btn-success active" data-class="btn-success" aria-pressed="true">
-                                                    <input type="radio" value="2" autocomplete="off" />
+                                                    <input type="radio" name="view_layout" value="1" autocomplete="off" checked="" />
                                                     <i class="icon-only ace-icon fa fa-th"></i>
                                                 </label>
 
                                                 <label title="List view" class="btn btn-lg btn-white btn-success" data-class="btn-success">
-                                                    <input type="radio" value="1" checked="" autocomplete="off" />
+                                                    <input type="radio" name="view_layout" value="2" checked="" autocomplete="off" />
                                                     <i class="icon-only ace-icon fa fa-list"></i>
+                                                </label>
+
+                                                <label title="Table view" class="btn btn-lg btn-white btn-success" data-class="btn-success">
+                                                    <input type="radio" name="view_layout" value="3" checked="" autocomplete="off" />
+                                                    <i class="icon-only ace-icon fa fa-table"></i>
                                                 </label>
                                             </div>
                                         </div>
@@ -130,15 +127,100 @@
                                 </div>
                                 <div class="space"></div>
                                 <div class="col-xs-12">
-                                    <div class="col-xs-3 col-sm-3 col-xs-6 col-md-3 grid-view">
-                                        <div class="img-thumb">
-                                            <img src="assets/img/image.png" class="img-responsive" alt="">
-                                        </div>
-                                        <div class="img-info">
-                                            <h3>Image title go here</h3>
+                                    <?php if(count($images) ): ?>
+                                        <!-- Grid View -->
+                                        <div class="grid-view view-layout">
+                                        <?php foreach ($images as $image): ?>
+                                            <div class="col-xs-6 col-sm-4 col-md-3">
+                                                <div class="thumbnail search-thumbnail">
+                                                    <span class="search-promotion label label-success arrowed-in arrowed-in-right">Sponsored</span>
 
+                                                    <img class="media-object" alt="100%x200" style="height: 200px; width: 100%; display: block;" src="<?= base_url().$image['url'] ?>" data-holder-rendered="true">
+                                                    <div class="caption">
+                                                        <h3 class="search-title">
+                                                            <?= $image['title'] ?>
+                                                        </h3>
+                                                        <p>
+                                                            <?php foreach ($image['keywords'] as $key): ?>
+                                                                <span type="button" class="btn btn-white btn-yellow btn-sm"><?= $key['keyword'] ?></span>
+                                                            <?php endforeach ?>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php endforeach ?>
                                         </div>
-                                    </div>
+                                        <!-- /Grid View -->
+                                        <!-- List view -->
+                                        <div class="list-view view-layout hide">
+                                        <?php foreach ($images as $image): ?>
+                                            <div class="col-xs-12">
+                                                <div class="media search-media">
+                                                    <div class="media-left">
+                                                        <a href="#">
+                                                            <img class="media-object" alt="72x72" style="width: 72px; height: 72px;" src="<?= base_url().$image['url'] ?>" data-holder-rendered="true">
+                                                        </a>
+                                                    </div>
+
+                                                    <div class="media-body">
+                                                        <div>
+                                                            <h4 class="media-heading">
+                                                                <?= $image['title'] ?>
+                                                            </h4>
+                                                        </div>
+                                                        <p>
+                                                            <?php foreach ($image['keywords'] as $key): ?>
+                                                                <span type="button" class="btn btn-white btn-yellow btn-sm"><?= $key['keyword'] ?></span>
+                                                            <?php endforeach ?>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="space"></div>
+                                        <?php endforeach ?>
+                                        </div>
+                                        <!-- /List view -->
+                                        <!-- Table view -->
+                                        <div class="table-view view-layout hide">
+                                            <table class="table table-striped table-bordered table-hover no-margin-bottom no-border-top col-xs-12">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Ảnh</th>
+                                                        <th>Tiêu đề</th>
+                                                        <th>Từ khóa</th>
+                                                        <th>Hành động</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                <?php foreach ($images as $image): ?>
+                                                    <tr>
+                                                        <td>
+                                                            <img class="media-object" alt="72x72" style="width: 72px; height: 72px;" src="<?= base_url().$image['url'] ?>" data-holder-rendered="true">  
+                                                        </td>
+                                                        <td><?= $image['title'] ?></td>
+                                                        <td>
+                                                            <?php foreach ($image['keywords'] as $key): ?>
+                                                                <span type="button" class="btn btn-white btn-yellow btn-sm"><?= $key['keyword'] ?></span>
+                                                            <?php endforeach ?>
+                                                        </td>
+                                                        <td>
+                                                            <button class="btn btn-white btn-info btn-bold">
+                                                                <i class="ace-icon fa fa-pencil-square-o bigger-120 blue"></i>
+                                                                Sửa
+                                                            </button>
+                                                            <button class="btn btn-white btn-warning btn-bold">
+                                                                <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+                                                                Xóa
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                <?php endforeach ?>
+                                            </tbody>
+                                        </table>
+                                        </div>
+                                        <!-- /Table view -->
+                                    <?php endif; ?>
                                 </div>
                             </div><!-- /.row -->
                 

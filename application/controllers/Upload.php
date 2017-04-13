@@ -11,7 +11,8 @@ class Upload extends CI_Controller {
 
 	public function index(){
 		$data = [
-			'title' => 'Upload Images'
+			'title' => 'Upload Images',
+			'images' => $this->Upload_model->get_images()
 		];
 		$this->load->view('upload/upload-header', $data);
 		$this->load->view('upload/sidebar');
@@ -19,6 +20,7 @@ class Upload extends CI_Controller {
 		$this->load->view('upload/footer');
 	}
 
+	// Xử lý upload
 	public function do_upload(){
 		$action = $this->input->post('action');
 		if (isset($action) && $action == 'upload-image') {
