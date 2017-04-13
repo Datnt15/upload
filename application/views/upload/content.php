@@ -22,8 +22,35 @@
             </div>
             <div class="vspace-12-sm"></div>
             <div class="space"></div>
-			<div class="page-content">
             <!-- PAGE CONTENT BEGINS -->
+            <div class="page-content">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs" id="myTab">
+                        <li class="active">
+                            <a data-toggle="tab" href="#upload-area" aria-expanded="false">
+                                <i class="green ace-icon fa fa-cloud-upload bigger-120"></i>
+                                Tải ảnh lên
+                            </a>
+                        </li>
+
+                        <li class="">
+                            <a data-toggle="tab" href="#gallery-area" aria-expanded="true">
+                                <i class="green ace-icon fa fa-picture-o bigger-120"></i>
+                                Gallery
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div id="upload-area" class="tab-pane fade active in">
+                            <p>Raw denim you probably haven't heard of them jean shorts Austin.</p>
+                        </div>
+
+                        <div id="gallery-area" class="tab-pane fade">
+                            <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid.</p>
+                        </div>
+                    </div>
+                </div>
                 <form action="/" class="dropzone well" id="dropzone" enctype="multipart/form-data">
                     <div class="fallback">
                         <input name="file" type="file" multiple="" />
