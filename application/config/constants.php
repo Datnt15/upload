@@ -96,7 +96,7 @@ define('INSTRUCTOR_TEACHER_USER_TYPE', 'instructor_teacher');
 define('CURATOR_TEACHER_USER_TYPE', 'curator_teacher');
 
 //================== Pagination ====================
-define('PER_PAGE', 8);
+define('PER_PAGE', 10);
 
 // ================= Sant to scrypt =================
 

@@ -7,40 +7,13 @@ class Upload extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('Upload_model');
-		$this->load->library('pagination');
 	}
 
-	function _remap($param) {
-        $this->index($param);
-    }
-
 	public function index(){
-		$page = $this->uri->segment(3);
-		
-		$where = "image_id > 0";
 		$data = [
-			'title' => 'Upload Images'
+			'title' => 'Upload Images',
+			'images' => $this->Upload_model->get_images()
 		];
-		if ($page == NULL) {
-			$page = 1;
-		}
-		if ($page != 0 ) {
-			$page = $page <= 0 ? 1 : $page;
-
-		}
-
-		if (isset($_GET['title'])) {
-			$where .= " AND title LIKE '%" . $_GET['title'] . "%'";
-		}
-
-		if (isset($_GET['keys'])) {
-			foreach (explode(',', $_GET['keys']) as $key ) {
-				$where .= " AND keywords LIKE '%" . $key . "%'";
-			}
-		}
-		$data['images'] = $this->Upload_model->get_images($where, ($page -1) * PER_PAGE);
-		$data['num_rows'] = $this->Upload_model->count_all_images_available($where);
-
 		$this->load->view('upload/upload-header', $data);
 		$this->load->view('upload/sidebar');
 		$this->load->view('upload/content');
