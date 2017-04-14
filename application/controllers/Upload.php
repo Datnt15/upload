@@ -438,6 +438,7 @@ class Upload extends CI_Controller {
 			}
 			if ($keyswords != '') {
 				$keyswords = explode(',', $keyswords);
+				$keyswords = array_unique($keyswords);
 			    foreach ($keyswords as $value) {
 			    	$single_key = $this->Upload_model->get_specifix_keyword(['keyword' => trim($value)]);
 			    	if(!empty($single_key)){

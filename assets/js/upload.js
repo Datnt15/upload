@@ -2,7 +2,7 @@ jQuery(function($) {
 
 	$('[data-rel=tooltip]').tooltip({container:'body'});
 	$('[data-rel=popover]').popover({container:'body'});
-
+	var drop_files = [];
 	$('#id-input-file-3').ace_file_input({
 		style: 'well',
 		btn_choose: 'Drop images here or click to choose',
@@ -15,6 +15,15 @@ jQuery(function($) {
 		preview_error : function(filename, error_code) {
 		}
 
+	}).on('change', function(){
+		var files_input = $('#id-input-file-3');
+		if(files_input.data('ace_input_method') == 'drop'){
+			for (var i = 0; i < files_input.data('ace_input_files').length; i++) {
+				drop_files.push(files_input.data('ace_input_files')[i]);
+			}
+			files_input.attr('required', 'FALSE');
+			console.log(drop_files);
+		}
 	});
 	
 	// Tag input cho phần upload
@@ -152,6 +161,10 @@ jQuery(function($) {
 					}
 		      	} 
 		    }
+		    for (i = 0; i < drop_files.length; i++) {
+		    	formdata.append("images[]", drop_files[i]);
+		    }
+
 		    if (formdata) {
 		  		$.ajax({
 				    url: $('base').attr('href') +"upload/do_upload",
@@ -212,7 +225,13 @@ jQuery(function($) {
 
 	$("#gallery-area").on('click', 'span.btn.btn-white.btn-yellow.btn-sm', function(event) {
 		$("#search-tags").data('tag').add( $(this).text() );
-		// search_by_title( $("#header-search-title").val(), $("#search-tags").val );
+		var keys_now = $("#search-tags").val();
+		if (keys_now == '') {
+			$("#search-tags").val($(this).text());
+		}else{
+			$("#search-tags").val( keys_now + "," + $(this).text() );
+		}
+		search_by_title( $("#header-search-title").val(), $("#search-tags").val() );
 	});
 
 
