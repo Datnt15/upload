@@ -245,6 +245,7 @@ class Upload extends CI_Controller {
 		if (isset($action) && $action == 'reload_images') {
 			$where = "image_id > 0";
 			$page = $this->input->post('page');
+			$layout = $this->input->post('layout');
 
 			if ($page == NULL) {
 				$page = 1;
@@ -263,10 +264,17 @@ class Upload extends CI_Controller {
 					$where .= " AND keywords LIKE '%" . $key . "%'";
 				}
 			}
-			$images = $this->Upload_model->get_images($where, ($page-1)*PER_PAGE);
-			if(count($images) ): ?>
+
+			self::render_images_content($this->Upload_model->get_images($where, ($page-1)*PER_PAGE),
+			$this->Upload_model->count_all_images_available($where), $layout);
+		}
+	}
+
+
+	private function render_images_content($images, $total, $layout){
+		if(count($images) ): ?>
                 <!-- Grid View -->
-                <div class="tab-pane fade active in" id="grid-view">
+                <div class="tab-pane fade <?= $layout == '#grid-view' ? 'active in' : '' ?> " id="grid-view">
                 <?php foreach ($images as $image): ?>
                     <div class="col-xs-6 col-sm-4 col-md-3 single-image">
                         <div class="thumbnail search-thumbnail">
@@ -290,7 +298,7 @@ class Upload extends CI_Controller {
                 </div>
                 <!-- /Grid View -->
                 <!-- List view -->
-                <div class="tab-pane fade" id="list-view">
+                <div class="tab-pane fade <?= $layout == '#list-view' ? 'active in' : '' ?>" id="list-view">
                 <?php foreach ($images as $image): ?>
                     <div class="col-xs-12 single-image">
                         <div class="media search-media">
@@ -330,7 +338,7 @@ class Upload extends CI_Controller {
                 </div>
                 <!-- /List view -->
                 <!-- Table view -->
-                <div class="tab-pane fade" id="table-view">
+                <div class="tab-pane fade <?= $layout == '#table-view' ? 'active in' : '' ?>" id="table-view">
                     <table class="table table-striped table-bordered table-hover no-margin-bottom col-xs-12">
                         <thead>
                             <tr>
@@ -374,10 +382,10 @@ class Upload extends CI_Controller {
                 
                 
                 $config['base_url'] = base_url() . "upload/page/";
-                $config['total_rows'] = $this->Upload_model->count_all_images_available($where);
+                $config['total_rows'] = $total;
                 $config['per_page'] = PER_PAGE;
                 $config['num_links'] = 3;
-                $config['full_tag_open']    = '<ul class="pagination">';
+                $config['full_tag_open']    = '<ul class="pagination pull-right">';
                 $config['full_tag_close']   = '</ul>';
                 $config['first_link']       = 'Trang đầu';
                 $config['last_link']        = 'Trang cuối';
@@ -400,7 +408,52 @@ class Upload extends CI_Controller {
                 $this->pagination->initialize($config);
                 
                 echo $this->pagination->create_links(); ?>
+            <?php else: ?>
+            	<div class="alert alert-danger">
+					<button type="button" class="close" data-dismiss="alert">
+						<i class="ace-icon fa fa-times"></i>
+					</button>
+					Không tìm thấy kết quả nào!
+				</div>
             <?php endif;
+	}
+
+	public function search_by_title(){
+		$action = $this->input->post('action');
+		if (isset($action) && $action == 'search_by_title') {
+			$where = "";
+			$page = 1;
+			$title = $this->input->post('title');
+			$keyswords = $this->input->post('keys');
+			$layout = $this->input->post('layout');
+			if ($page == NULL) {
+				$page = 1;
+			}
+
+			if ($page != 0 ) {
+				$page = $page <= 0 ? 1 : $page;
+			}
+			if ($title != '') {
+				$where .= "title LIKE '%" . $title . "%'";
+			}
+			if ($keyswords != '') {
+				$keyswords = explode(',', $keyswords);
+			    foreach ($keyswords as $value) {
+			    	$single_key = $this->Upload_model->get_specifix_keyword(['keyword' => trim($value)]);
+			    	if(!empty($single_key)){
+			    		if ($where != '') {
+				    		$where .= " OR keywords LIKE '%" . $single_key[0]['key_id'] . "%'";
+			    		}else{
+				    		$where .= "keywords LIKE '%" . $single_key[0]['key_id'] . "%'";
+			    		}
+			    	}
+			    }
+			}
+			if ($where == '') {
+				$where = 'image_id > 0';
+			}
+			self::render_images_content($this->Upload_model->get_images($where, ($page-1)*PER_PAGE),
+			$this->Upload_model->count_all_images_available($where), $layout);
 		}
 	}
 

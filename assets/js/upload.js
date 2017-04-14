@@ -10,33 +10,18 @@ jQuery(function($) {
 		no_icon: 'ace-icon fa fa-picture-o',
 		droppable: true,
 		thumbnail: 'small',
-		multiple: true,
 		allowExt: ["jpeg", "jpg", "png", "gif" , "bmp"],
 		allowMime: ["image/jpg", "image/jpeg", "image/png", "image/gif", "image/bmp"],
 		preview_error : function(filename, error_code) {
 		}
 
-	}).on('change', function(){
-	}).off('file.error.ace')
-	.on('file.error.ace', function(e, info) {
-		console.log(info.file_count);//number of selected files
-		console.log(info.invalid_count);//number of invalid files
-		console.log(info.error_list.ext);//a list of errors in the following format
-		
-		if( !info.dropped ) {
-			//perhapse reset file field if files have been selected, and there are invalid files among them
-			//when files are dropped, only valid files will be added to our file array
-			e.preventDefault();//it will rest input
-		}
-		
-
 	});
 	
 	// Tag input cho phần upload
-	var tag_input = $('#form-field-tags');
+	var form_field_tags = $('#form-field-tags');
 	try{
-		tag_input.tag({
-			placeholder:tag_input.attr('placeholder'),
+		form_field_tags.tag({
+			placeholder:form_field_tags.attr('placeholder'),
 			//enable typeahead by specifying the source array
 			// source: keywords,//defined in ace.js >> ace.enable_search_ahead
 			
@@ -55,7 +40,7 @@ jQuery(function($) {
 	}
 	catch(e) {
 		//display a textarea for old IE, because it doesn't support this plugin or another one I tried!
-		tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="3">'+tag_input.val()+'</textarea>').remove();
+		form_field_tags.after('<textarea id="'+form_field_tags.attr('id')+'" name="'+form_field_tags.attr('name')+'" rows="3">'+form_field_tags.val()+'</textarea>').remove();
 		autosize($('#form-field-tags'));
 	}
 
@@ -105,10 +90,10 @@ jQuery(function($) {
 	).parent('.twitter-typeahead').css('display', 'block');
 
 	// tag input cho phần tìm kiếm
-	var tag_input = $('#search-tags');
+	var search_tags = $('#search-tags');
 	try{
-		tag_input.tag({
-			placeholder:tag_input.attr('placeholder'),
+		search_tags.tag({
+			placeholder:search_tags.attr('placeholder'),
 			source: function(query, process) {
 			  	$.ajax({
 		  			url: $('base').attr('href') +"upload/get_keywords/"+encodeURIComponent(query),
@@ -122,16 +107,16 @@ jQuery(function($) {
 	}
 	catch(e) {
 		//display a textarea for old IE, because it doesn't support this plugin or another one I tried!
-		tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="3">'+tag_input.val()+'</textarea>').remove();
+		search_tags.after('<textarea id="'+search_tags.attr('id')+'" name="'+search_tags.attr('name')+'" rows="3">'+search_tags.val()+'</textarea>').remove();
 		autosize($('#search-tags'));
 	}
 
 
 	// tag input cho phần tìm kiếm
-	var tag_input = $('#edit_image_keys');
+	var edit_image_keys = $('#edit_image_keys');
 	try{
-		tag_input.tag({
-			placeholder:tag_input.attr('placeholder'),
+		edit_image_keys.tag({
+			placeholder:edit_image_keys.attr('placeholder'),
 			source: function(query, process) {
 			  	$.ajax({
 		  			url: $('base').attr('href') +"upload/get_keywords/"+encodeURIComponent(query),
@@ -145,7 +130,7 @@ jQuery(function($) {
 	}
 	catch(e) {
 		//display a textarea for old IE, because it doesn't support this plugin or another one I tried!
-		tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="3">'+tag_input.val()+'</textarea>').remove();
+		edit_image_keys.after('<textarea id="'+edit_image_keys.attr('id')+'" name="'+edit_image_keys.attr('name')+'" rows="3">'+edit_image_keys.val()+'</textarea>').remove();
 		autosize($('#edit_image_keys'));
 	}
 
@@ -198,6 +183,36 @@ jQuery(function($) {
 		event.preventDefault();
 		load_image_info($(this).attr('data-img-id'));
 		$("#edit-modal").modal('show');
+	});
+
+
+	$("#header-search-title").keyup(function(e) {
+		if(e.keyCode == 13){
+			search_by_title( $(this).val(), $("#search-tags").val() );
+	    }
+	});
+
+
+	$("#header-search-title").change(function() {
+		search_by_title( $(this).val(), $("#search-tags").val() );
+	});
+
+	$("#header-search-title").on('typeahead:selected', function(evt, item) {
+		search_by_title( $(this).val(), $("#search-tags").val() );
+	});
+
+	$("#search-tags").on('added',function() {
+		search_by_title( $("#header-search-title").val(), $(this).val() );
+	});
+
+
+	$("#search-tags").on('removed',function() {
+		search_by_title( $("#header-search-title").val(), $(this).val() );
+	});
+
+	$("#gallery-area").on('click', 'span.btn.btn-white.btn-yellow.btn-sm', function(event) {
+		$("#search-tags").data('tag').add( $(this).text() );
+		// search_by_title( $("#header-search-title").val(), $("#search-tags").val );
 	});
 
 
@@ -265,7 +280,8 @@ jQuery(function($) {
 			{
 				action: 'reload_images',
 				url : window.location.href,
-				page : $page
+				page : $page,
+				layout: get_current_layout()
 			}, function(data) {
 				$("#gallery-content").html(data);
 			}
@@ -278,11 +294,23 @@ jQuery(function($) {
 		pathname = pathname.filter(function(v){return v!==''});
 		return pathname.length > 3 ? parseInt(pathname[3]) : 1;
 	};
-	// var maxHeight = 0;
-	// $("#gallery-content #grid-view").find('.single-image .thumbnail.search-thumbnail').each(function() {
-	// 	maxHeight = $(this).innerHeight() > maxHeight ? $(this).innerHeight() : maxHeight;
-	// 	console.log(maxHeight);
-	// });
 
-	// $("#grid-view .single-image").height(maxHeight);
+	var get_current_layout = function(){
+		return $(".search-area ul#toggle-layout-format li.active a").attr('href');
+	};
+
+	var search_by_title = function($title, $keys){
+		$.post(
+			$('base').attr('href') +"upload/search_by_title", 
+			{
+				action: 'search_by_title',
+				title : $title,
+				keys : $keys,
+				layout: get_current_layout()
+			}, function(data) {
+				$("#gallery-content").html(data);
+			}
+		);
+	}
+
 });

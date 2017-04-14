@@ -27,17 +27,18 @@
                 <div class="tabbable">
                     <!-- Tab header -->
                     <ul class="nav nav-tabs" id="myTab">
+
                         <li class="active">
-                            <a data-toggle="tab" href="#upload-area" aria-expanded="false">
-                                <i class="green ace-icon fa fa-cloud-upload bigger-120"></i>
-                                Upload
+                            <a data-toggle="tab" href="#gallery-area" aria-expanded="true">
+                                <i class="green ace-icon fa fa-picture-o bigger-120"></i>
+                                Gallery
                             </a>
                         </li>
 
                         <li class="">
-                            <a data-toggle="tab" href="#gallery-area" aria-expanded="true">
-                                <i class="green ace-icon fa fa-picture-o bigger-120"></i>
-                                Gallery
+                            <a data-toggle="tab" href="#upload-area" aria-expanded="false">
+                                <i class="green ace-icon fa fa-cloud-upload bigger-120"></i>
+                                Upload
                             </a>
                         </li>
                     </ul>
@@ -47,7 +48,7 @@
                     <div class="tab-content">
 
                         <!-- Upload Area -->
-                        <div id="upload-area" class="tab-pane fade active in">
+                        <div id="upload-area" class="tab-pane fade">
                             <div class="page-header">
                                 <h1>
                                     Đăng tải hình ảnh cùng từ khóa                                   
@@ -82,7 +83,7 @@
                         <!-- /Upload Area -->
                         
                         <!-- Gallery -->
-                        <div id="gallery-area" class="tab-pane fade">
+                        <div id="gallery-area" class="tab-pane fade active in">
                             <div class="page-header">
                                 <h1>
                                     Quản lý hình ảnh                                    
@@ -91,12 +92,12 @@
 
                             <div class="row">
                                 <div class="col-xs-12 well">
-                                    <form class="form-inline col-xs-8" action="" method="POST" id="filter-form" >
+                                    <form class="" action="" method="POST" id="filter-form" >
                                         <div class="col-xs-6">
-                                            <input type="text" name="title" class="typeahead" placeholder="Title">
+                                            <input type="text" id="header-search-title" name="title" class="typeahead" placeholder="Tìm ảnh với tiêu đề ....">
                                         </div>
                                         <div class="col-xs-6">
-                                            <input type="text" name="tags" id="search-tags" value="" placeholder="Enter tags to search ..."/>
+                                            <input type="text" name="tags" id="search-tags" value="" placeholder="Tìm ảnh với từ khóa ..."/>
                                             
                                         </div>
                                     </form>
@@ -244,7 +245,7 @@
                                             $config['total_rows'] = $num_rows;
                                             $config['per_page'] = PER_PAGE;
                                             $config['num_links'] = 3;
-                                            $config['full_tag_open']    = '<ul class="pagination">';
+                                            $config['full_tag_open']    = '<ul class="pagination pull-right">';
                                             $config['full_tag_close']   = '</ul>';
                                             $config['first_link']       = 'Trang đầu';
                                             $config['last_link']        = 'Trang cuối';
