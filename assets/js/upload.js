@@ -111,11 +111,20 @@ jQuery(function($) {
 			  	});
 			}
 	  	});
+	  	var $tag_obj = $('#search-tags').data('tag');
+	  	var inter_keys =  $('#search-tags').val();
+	  	inter_keys = inter_keys.split(",");
+	  	for (var i = 0; i < inter_keys.length; i++) {
+	  		var key = inter_keys[i].replace(/ /g,'');
+			if (key != '' && key != ' ') {
+				$tag_obj.add(key);
+			}
+	  	}
 	}
 	catch(e) {
 		//display a textarea for old IE, because it doesn't support this plugin or another one I tried!
 		search_tags.after('<textarea id="'+search_tags.attr('id')+'" name="'+search_tags.attr('name')+'" rows="3">'+search_tags.val()+'</textarea>').remove();
-		autosize($('#search-tags'));
+		// autosize($('#search-tags'));
 	}
 
 
@@ -225,7 +234,6 @@ jQuery(function($) {
 	});
 
 	$("#search-tags").on('added',function() {
-		console.log($(this).val());
 		search_by_title( $("#header-search-title").val(), $(this).val() );
 	});
 
@@ -309,7 +317,6 @@ jQuery(function($) {
 			$('base').attr('href') +"upload/reload_images", 
 			{
 				action: 'reload_images',
-				url : window.location.href,
 				page : $page,
 				layout: get_current_layout()
 			}, function(data) {

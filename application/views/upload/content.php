@@ -94,7 +94,7 @@
                                 <div class="col-xs-12 well">
                                     <form class="" action="" method="POST" id="filter-form" >
                                         <div class="col-xs-6">
-                                            <input type="text" id="header-search-title" name="title" class="typeahead" placeholder="Tìm ảnh với tiêu đề ....">
+                                            <input type="text" id="header-search-title" name="title" class="typeahead" value="<?= $this->session->has_userdata('title') ? $this->session->title : '' ?>" placeholder="Tìm ảnh với tiêu đề ....">
                                         </div>
                                         <div class="col-xs-6">
                                             <input type="text" name="tags" id="search-tags" value="" placeholder="Tìm ảnh với từ khóa ..."/>

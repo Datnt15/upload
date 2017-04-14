@@ -15,31 +15,24 @@ class Upload extends CI_Controller {
  //    }
 
 	public function index(){
-		$page = $this->uri->segment(3);
+		if ($this->session->has_userdata('title')) {
+			$this->session->set_userdata('title', '');
+		}
+
+		if ($this->session->has_userdata('keyids')) {
+			$this->session->set_userdata('keyids', '');
+		}
+
+		if ($this->session->has_userdata('keywords')) {
+			$this->session->set_userdata('keywords', '');
+		}
 		
-		$where = "image_id > 0";
 		$data = [
 			'title' => 'Upload Images'
 		];
-		if ($page == NULL) {
-			$page = 1;
-		}
-		if ($page != 0 ) {
-			$page = $page <= 0 ? 1 : $page;
-
-		}
-
-		if (isset($_GET['title'])) {
-			$where .= " AND title LIKE '%" . $_GET['title'] . "%'";
-		}
-
-		if (isset($_GET['keys'])) {
-			foreach (explode(',', $_GET['keys']) as $key ) {
-				$where .= " AND keywords LIKE '%" . $key . "%'";
-			}
-		}
-		$data['images'] = $this->Upload_model->get_images($where, 0);
-		$data['num_rows'] = $this->Upload_model->count_all_images_available($where);
+		
+		$data['images'] = $this->Upload_model->get_images("image_id > 0", 0);
+		$data['num_rows'] = $this->Upload_model->count_all_images_available("image_id > 0");
 
 		$this->load->view('upload/upload-header', $data);
 		$this->load->view('upload/sidebar');
@@ -50,7 +43,7 @@ class Upload extends CI_Controller {
 
 	public function page($page = NULL){
 
-		$where = "image_id > 0";
+		$where = "";
 		$data = [
 			'title' => 'Upload Images'
 		];
@@ -62,14 +55,21 @@ class Upload extends CI_Controller {
 
 		}
 
-		if ($this->session->has_userdata('title')) {
-			$where .= " AND title LIKE '%" . $this->session->title . "%'";
+		if ($this->session->has_userdata('title') && $this->session->title !='') {
+			$where .= "title LIKE '%" . $this->session->title . "%'";
 		}
 
-		if ($this->session->has_userdata('keywords')) {
-			foreach (explode(',', $this->session->keywords) as $key ) {
-				$where .= " AND keywords LIKE '%" . $key . "%'";
+		if ($this->session->has_userdata('keyids') && $this->session->keyids != '') {
+			foreach (explode(',', $this->session->keyids) as $key ) {
+				if ($where != '') {
+					$where .= " OR keywords LIKE '%" . $key . "%'";
+				}else{
+					$where .= "keywords LIKE '%" . $key . "%'";
+				}
 			}
+		}
+		if ($where == '') {
+			$where = 'image_id > 0';
 		}
 		$data['images'] = $this->Upload_model->get_images($where, ($page-1)*PER_PAGE);
 		$data['num_rows'] = $this->Upload_model->count_all_images_available($where);
@@ -241,10 +241,9 @@ class Upload extends CI_Controller {
 	public function reload_images(){
 		$action = $this->input->post('action');
 		if (isset($action) && $action == 'reload_images') {
-			$where = "image_id > 0";
+			$where = "";
 			$page = $this->input->post('page');
 			$layout = $this->input->post('layout');
-
 			if ($page == NULL) {
 				$page = 1;
 			}
@@ -253,16 +252,22 @@ class Upload extends CI_Controller {
 				$page = $page <= 0 ? 1 : $page;
 			}
 
-			if (isset($_GET['title'])) {
-				$where .= " AND title LIKE '%" . $_GET['title'] . "%'";
+			if ($this->session->has_userdata('title') && $this->session->title != '') {
+				$where .= "title LIKE '%" . $this->session->title . "%'";
 			}
 
-			if (isset($_GET['keys'])) {
-				foreach (explode(',', $_GET['keys']) as $key ) {
-					$where .= " AND keywords LIKE '%" . $key . "%'";
+			if ($this->session->has_userdata('keyids') && $this->session->keyids != '') {
+				foreach (explode(',', $this->session->keyids) as $key ) {
+					if ($where != '') {
+						$where .= " OR keywords LIKE '%" . $key . "%'";
+					}else{
+						$where .= "keywords LIKE '%" . $key . "%'";
+					}
 				}
 			}
-
+			if ($where == '') {
+				$where = "image_id > 0";
+			}
 			self::render_images_content($this->Upload_model->get_images($where, ($page-1)*PER_PAGE),
 			$this->Upload_model->count_all_images_available($where), $layout);
 		}
@@ -271,149 +276,149 @@ class Upload extends CI_Controller {
 
 	private function render_images_content($images, $total, $layout){
 		if(count($images) ): ?>
-                <!-- Grid View -->
-                <div class="tab-pane fade <?= $layout == '#grid-view' ? 'active in' : '' ?> " id="grid-view">
-                <?php foreach ($images as $image): ?>
-                    <div class="col-xs-6 col-sm-4 col-md-3 single-image">
-                        <div class="thumbnail search-thumbnail">
-                            <span class="search-promotion label label-warning arrowed-in arrowed-in-right pull-right delete-img" data-img-id="<?= $image['image_id'] ?>">Xóa</span>
-                            <span class="search-promotion label label-success arrowed-in arrowed-in-right edit-img" data-img-id="<?= $image['image_id'] ?>">Sửa</span>
+            <!-- Grid View -->
+            <div class="tab-pane fade <?= $layout == '#grid-view' ? 'active in' : '' ?> " id="grid-view">
+            <?php foreach ($images as $image): ?>
+                <div class="col-xs-6 col-sm-4 col-md-3 single-image">
+                    <div class="thumbnail search-thumbnail">
+                        <span class="search-promotion label label-warning arrowed-in arrowed-in-right pull-right delete-img" data-img-id="<?= $image['image_id'] ?>">Xóa</span>
+                        <span class="search-promotion label label-success arrowed-in arrowed-in-right edit-img" data-img-id="<?= $image['image_id'] ?>">Sửa</span>
 
-                            <img class="media-object" alt="100%x200" style="height: 200px; width: 100%; display: block;" src="<?= base_url().$image['url'] ?>" data-holder-rendered="true">
-                            <div class="caption">
-                                <h3 class="search-title">
+                        <img class="media-object" alt="100%x200" style="height: 200px; width: 100%; display: block;" src="<?= base_url().$image['url'] ?>" data-holder-rendered="true">
+                        <div class="caption">
+                            <h3 class="search-title">
+                                <?= $image['title'] ?>
+                            </h3>
+                            <p>
+                                <?php foreach ($image['keywords'] as $key): ?>
+                                    <span type="button" class="btn btn-white btn-yellow btn-sm"><?= $key['keyword'] ?></span>
+                                <?php endforeach ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach ?>
+            </div>
+            <!-- /Grid View -->
+            <!-- List view -->
+            <div class="tab-pane fade <?= $layout == '#list-view' ? 'active in' : '' ?>" id="list-view">
+            <?php foreach ($images as $image): ?>
+                <div class="col-xs-12 single-image">
+                    <div class="media search-media">
+                        <div class="media-left">
+                            <a href="#">
+                                <img class="media-object" alt="72x72" style="width: 72px; height: 72px;" src="<?= base_url().$image['url'] ?>" data-holder-rendered="true">
+                            </a>
+                        </div>
+
+                        <div class="media-body">
+                            <div>
+                                <h4 class="media-heading col-xs-6">
                                     <?= $image['title'] ?>
-                                </h3>
-                                <p>
-                                    <?php foreach ($image['keywords'] as $key): ?>
-                                        <span type="button" class="btn btn-white btn-yellow btn-sm"><?= $key['keyword'] ?></span>
-                                    <?php endforeach ?>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach ?>
-                </div>
-                <!-- /Grid View -->
-                <!-- List view -->
-                <div class="tab-pane fade <?= $layout == '#list-view' ? 'active in' : '' ?>" id="list-view">
-                <?php foreach ($images as $image): ?>
-                    <div class="col-xs-12 single-image">
-                        <div class="media search-media">
-                            <div class="media-left">
-                                <a href="#">
-                                    <img class="media-object" alt="72x72" style="width: 72px; height: 72px;" src="<?= base_url().$image['url'] ?>" data-holder-rendered="true">
-                                </a>
-                            </div>
-
-                            <div class="media-body">
-                                <div>
-                                    <h4 class="media-heading col-xs-6">
-                                        <?= $image['title'] ?>
-                                    </h4>
-                                    <div class="col-xs-6">
-                                        <button class="btn btn-white btn-warning btn-bold pull-right delete-img" data-img-id="<?= $image['image_id'] ?>">
-                                            <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
-                                            Xóa
-                                        </button>
-
-                                        <button class="btn btn-white btn-info btn-bold pull-right edit-img" data-img-id="<?= $image['image_id'] ?>">
-                                            <i class="ace-icon fa fa-pencil-square-o bigger-120 blue"></i>
-                                            Sửa
-                                        </button>
-                                    </div>
-                                </div>
-                                <p>
-                                    <?php foreach ($image['keywords'] as $key): ?>
-                                        <span type="button" class="btn btn-white btn-yellow btn-sm"><?= $key['keyword'] ?></span>
-                                    <?php endforeach ?>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="space"></div>
-                <?php endforeach ?>
-                </div>
-                <!-- /List view -->
-                <!-- Table view -->
-                <div class="tab-pane fade <?= $layout == '#table-view' ? 'active in' : '' ?>" id="table-view">
-                    <table class="table table-striped table-bordered table-hover no-margin-bottom col-xs-12">
-                        <thead>
-                            <tr>
-                                <th>Ảnh</th>
-                                <th>Tiêu đề</th>
-                                <th>Từ khóa</th>
-                                <th>Hành động</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <?php foreach ($images as $image): ?>
-                            <tr class="single-image">
-                                <td>
-                                    <img class="media-object" alt="72x72" style="width: 72px; height: 72px;" src="<?= base_url().$image['url'] ?>" data-holder-rendered="true">  
-                                </td>
-                                <td><?= $image['title'] ?></td>
-                                <td>
-                                    <?php foreach ($image['keywords'] as $key): ?>
-                                        <span type="button" class="btn btn-white btn-yellow btn-sm"><?= $key['keyword'] ?></span>
-                                    <?php endforeach ?>
-                                </td>
-                                <td>
-                                    <button class="btn btn-white btn-info btn-bold edit-img" data-img-id="<?= $image['image_id'] ?>">
-                                        <i class="ace-icon fa fa-pencil-square-o bigger-120 blue"></i>
-                                        Sửa
-                                    </button>
-                                    <button class="btn btn-white btn-warning btn-bold delete-img" data-img-id="<?= $image['image_id'] ?>">
+                                </h4>
+                                <div class="col-xs-6">
+                                    <button class="btn btn-white btn-warning btn-bold pull-right delete-img" data-img-id="<?= $image['image_id'] ?>">
                                         <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
                                         Xóa
                                     </button>
-                                </td>
-                            </tr>
-                            
-                        <?php endforeach ?>
-                        </tbody>
-                    </table>
+
+                                    <button class="btn btn-white btn-info btn-bold pull-right edit-img" data-img-id="<?= $image['image_id'] ?>">
+                                        <i class="ace-icon fa fa-pencil-square-o bigger-120 blue"></i>
+                                        Sửa
+                                    </button>
+                                </div>
+                            </div>
+                            <p>
+                                <?php foreach ($image['keywords'] as $key): ?>
+                                    <span type="button" class="btn btn-white btn-yellow btn-sm"><?= $key['keyword'] ?></span>
+                                <?php endforeach ?>
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <!-- /Table view -->
-                <div class="clearfix"></div>
-                <?php 
-                
-                
-                $config['base_url'] = base_url() . "upload/page/";
-                $config['total_rows'] = $total;
-                $config['per_page'] = PER_PAGE;
-                $config['num_links'] = 3;
-                $config['full_tag_open']    = '<ul class="pagination pull-right">';
-                $config['full_tag_close']   = '</ul>';
-                $config['first_link']       = 'Trang đầu';
-                $config['last_link']        = 'Trang cuối';
-                $config['next_link']        = '<i class="fa fa-chevron-right" aria-hidden="true"></i>';
-                $config['next_tag_open']    = '<li>';
-                $config['next_tag_close']   = '</li>';
-                $config['first_tag_open']   = '<li>';
-                $config['last_tag_open']    = '<li>';
-                $config['first_tag_close']  = '</li>';
-                $config['last_tag_close']   = '</li>';
-                $config['prev_link']        = '<i class="fa fa-chevron-left" aria-hidden="true"></i>';
-                $config['prev_tag_open']    = '<li>';
-                $config['prev_tag_close']   = '</li>';
-                $config['cur_tag_open']     = '<li class="active"><a href="#">';
-                $config['cur_tag_close']    = '</a></li>';
-                $config['num_tag_open']     = '<li>';
-                $config['num_tag_close']    = '</li>';
-                $config['use_page_numbers'] = TRUE;
-                
-                $this->pagination->initialize($config);
-                
-                echo $this->pagination->create_links(); ?>
-            <?php else: ?>
-            	<div class="alert alert-danger">
-					<button type="button" class="close" data-dismiss="alert">
-						<i class="ace-icon fa fa-times"></i>
-					</button>
-					Không tìm thấy kết quả nào!
-				</div>
-            <?php endif;
+                <div class="space"></div>
+            <?php endforeach ?>
+            </div>
+            <!-- /List view -->
+            <!-- Table view -->
+            <div class="tab-pane fade <?= $layout == '#table-view' ? 'active in' : '' ?>" id="table-view">
+                <table class="table table-striped table-bordered table-hover no-margin-bottom col-xs-12">
+                    <thead>
+                        <tr>
+                            <th>Ảnh</th>
+                            <th>Tiêu đề</th>
+                            <th>Từ khóa</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($images as $image): ?>
+                        <tr class="single-image">
+                            <td>
+                                <img class="media-object" alt="72x72" style="width: 72px; height: 72px;" src="<?= base_url().$image['url'] ?>" data-holder-rendered="true">  
+                            </td>
+                            <td><?= $image['title'] ?></td>
+                            <td>
+                                <?php foreach ($image['keywords'] as $key): ?>
+                                    <span type="button" class="btn btn-white btn-yellow btn-sm"><?= $key['keyword'] ?></span>
+                                <?php endforeach ?>
+                            </td>
+                            <td>
+                                <button class="btn btn-white btn-info btn-bold edit-img" data-img-id="<?= $image['image_id'] ?>">
+                                    <i class="ace-icon fa fa-pencil-square-o bigger-120 blue"></i>
+                                    Sửa
+                                </button>
+                                <button class="btn btn-white btn-warning btn-bold delete-img" data-img-id="<?= $image['image_id'] ?>">
+                                    <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
+                                    Xóa
+                                </button>
+                            </td>
+                        </tr>
+                        
+                    <?php endforeach ?>
+                    </tbody>
+                </table>
+            </div>
+            <!-- /Table view -->
+            <div class="clearfix"></div>
+            <?php 
+            
+            
+            $config['base_url'] = base_url() . "upload/page/";
+            $config['total_rows'] = $total;
+            $config['per_page'] = PER_PAGE;
+            $config['num_links'] = 3;
+            $config['full_tag_open']    = '<ul class="pagination pull-right">';
+            $config['full_tag_close']   = '</ul>';
+            $config['first_link']       = 'Trang đầu';
+            $config['last_link']        = 'Trang cuối';
+            $config['next_link']        = '<i class="fa fa-chevron-right" aria-hidden="true"></i>';
+            $config['next_tag_open']    = '<li>';
+            $config['next_tag_close']   = '</li>';
+            $config['first_tag_open']   = '<li>';
+            $config['last_tag_open']    = '<li>';
+            $config['first_tag_close']  = '</li>';
+            $config['last_tag_close']   = '</li>';
+            $config['prev_link']        = '<i class="fa fa-chevron-left" aria-hidden="true"></i>';
+            $config['prev_tag_open']    = '<li>';
+            $config['prev_tag_close']   = '</li>';
+            $config['cur_tag_open']     = '<li class="active"><a href="#">';
+            $config['cur_tag_close']    = '</a></li>';
+            $config['num_tag_open']     = '<li>';
+            $config['num_tag_close']    = '</li>';
+            $config['use_page_numbers'] = TRUE;
+            
+            $this->pagination->initialize($config);
+            
+            echo $this->pagination->create_links(); ?>
+        <?php else: ?>
+        	<div class="alert alert-danger">
+				<button type="button" class="close" data-dismiss="alert">
+					<i class="ace-icon fa fa-times"></i>
+				</button>
+				Không tìm thấy kết quả nào!
+			</div>
+        <?php endif;
 	}
 
 	public function search_by_title(){
@@ -436,7 +441,7 @@ class Upload extends CI_Controller {
 				$this->session->set_userdata('title', $title);
 			}
 			if ($keywords != '') {
-				
+				$this->session->set_userdata('keywords',$keywords);
 				$keywords = explode(',', $keywords);
 				$keywords = array_unique($keywords);
 				$keys = [];
@@ -453,7 +458,7 @@ class Upload extends CI_Controller {
 			    	}
 			    }
 			    $keys = implode(',', $keys);
-			    $this->session->set_userdata('keywords',$keys);
+			    $this->session->set_userdata('keyids',$keys);
 			}
 			if ($where == '') {
 				$where = 'image_id > 0';

@@ -50,6 +50,17 @@
 <script src="assets/js/ace-elements.min.js"></script>
 <script src="assets/js/ace.min.js"></script>
 <script src="assets/js/jquery-typeahead.js"></script>
+<script>
+	jQuery(document).ready(function($) {
+		<?php if ($this->session->has_userdata('keywords')): ?>
+			var keys = "<?= $this->session->keywords ?>";
+			keys = keys.replace(/ /g,'');
+			if (keys != '' && keys != ' ') {
+				$("#search-tags").val(keys);
+			}
+		<?php endif; ?>
+	});
+</script>
 <script src="assets/js/upload.js"></script>
 </body>
 </html>

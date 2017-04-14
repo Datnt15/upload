@@ -22492,4 +22492,5 @@ input.typeahead.scrollable~.tt-menu {
 
 .thumbnail.search-thumbnail {
     height: 345px;
+    overflow: scroll;
 }
