@@ -68,7 +68,7 @@ class Upload_model extends CI_Model {
 	 * @return mảng dữ liệu
 	 */
 	public function get_images($where = 'uid=1', $offset = 0, $limit = PER_PAGE){
-		$res = $this->db->flush_cache()->select('*')->where($where)->limit($limit, $offset)->get('images')->result_array();
+		$res = $this->db->flush_cache()->select('*')->where($where)->limit($limit, $offset)->order_by('date_created', 'DESC')->get('images')->result_array();
 		if (count($res)) {
 			foreach ($res as &$img) {
 				$img['keywords'] = self::get_keywords('key_id IN ('. $img['keywords'] . ')');

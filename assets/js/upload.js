@@ -21,8 +21,6 @@ jQuery(function($) {
 			for (var i = 0; i < files_input.data('ace_input_files').length; i++) {
 				drop_files.push(files_input.data('ace_input_files')[i]);
 			}
-			files_input.attr('required', 'FALSE');
-			console.log(drop_files);
 		}
 	});
 	
@@ -165,6 +163,8 @@ jQuery(function($) {
 		    	formdata.append("images[]", drop_files[i]);
 		    }
 
+
+
 		    if (formdata) {
 		  		$.ajax({
 				    url: $('base').attr('href') +"upload/do_upload",
@@ -175,7 +175,17 @@ jQuery(function($) {
 				    success: function () {
 				    	reload_images( get_current_page() );
 				    	$("#myTab a[href='#gallery-area']").click();
-			      		this_form.reset();
+			      		$("#id-input-file-3").ace_file_input('reset_input');
+			      		var $tag_obj = $('#form-field-tags').data('tag');
+
+						// Bỏ tất cả những từ khóa cũ
+						var values = $tag_obj.values;
+						
+						for (var i = values.length - 1; i >= 0; i--) {
+							var index = $tag_obj.inValues(values[i]);
+							$tag_obj.remove(index);
+							drop_files = [];
+						}
 				    }
 				});
 				return false;
@@ -215,6 +225,7 @@ jQuery(function($) {
 	});
 
 	$("#search-tags").on('added',function() {
+		console.log($(this).val());
 		search_by_title( $("#header-search-title").val(), $(this).val() );
 	});
 

@@ -58,7 +58,7 @@
                             <form class="form-horizontal" id="upload-form" role="form" action="" method="POST" enctype="multipart/form-data" >
                                 <div class="form-group">
                                     <div class="col-xs-12">
-                                        <input multiple="true" name="images[]" type="file" id="id-input-file-3" required="" />
+                                        <input multiple="true" name="images[]" type="file" id="id-input-file-3" />
                                     </div>
                                 </div>
                                 <div class="space-4"></div>

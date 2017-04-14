@@ -95,13 +95,13 @@ class Upload extends CI_Controller {
 			$keys = [];
 			$keyswords = explode(',', $keyswords);
 		    foreach ($keyswords as $value) {
-		    	$single_key = $this->Upload_model->get_specifix_keyword(['keyword' => $value]);
+		    	$single_key = $this->Upload_model->get_specifix_keyword(['keyword' => rtrim(ltrim($value)) ]);
 		    	if(!empty($single_key)){
 		    		array_push($keys, $single_key[0]['key_id']);
 		    	}else{
 		    		array_push(
 		    			$keys, 
-		    			$this->Upload_model->add_keyword(['keyword' => $value])
+		    			$this->Upload_model->add_keyword(['keyword' => rtrim(ltrim($value)) ])
 		    		);
 		    	}
 		    }
@@ -440,7 +440,8 @@ class Upload extends CI_Controller {
 				$keyswords = explode(',', $keyswords);
 				$keyswords = array_unique($keyswords);
 			    foreach ($keyswords as $value) {
-			    	$single_key = $this->Upload_model->get_specifix_keyword(['keyword' => trim($value)]);
+			    	$value = rtrim(ltrim($value));
+			    	$single_key = $this->Upload_model->get_specifix_keyword(['keyword' => $value]);
 			    	if(!empty($single_key)){
 			    		if ($where != '') {
 				    		$where .= " OR keywords LIKE '%" . $single_key[0]['key_id'] . "%'";
