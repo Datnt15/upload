@@ -62,12 +62,12 @@ class Upload extends CI_Controller {
 
 		}
 
-		if (isset($_GET['title'])) {
-			$where .= " AND title LIKE '%" . $_GET['title'] . "%'";
+		if ($this->session->has_userdata('title')) {
+			$where .= " AND title LIKE '%" . $this->session->title . "%'";
 		}
 
-		if (isset($_GET['keys'])) {
-			foreach (explode(',', $_GET['keys']) as $key ) {
+		if ($this->session->has_userdata('keywords')) {
+			foreach (explode(',', $this->session->keywords) as $key ) {
 				$where .= " AND keywords LIKE '%" . $key . "%'";
 			}
 		}
@@ -84,7 +84,7 @@ class Upload extends CI_Controller {
 	public function do_upload(){
 		$action = $this->input->post('action');
 		if (isset($action) && $action == 'upload-image') {
-			$keyswords = $this->input->post('keywords');
+			$keywords = $this->input->post('keywords');
 			$images = self::reArrayFiles( $_FILES['images'] );
 			$target_dir = "uploads/";
 			$res = [
@@ -93,8 +93,8 @@ class Upload extends CI_Controller {
 				'data' => []
 			];
 			$keys = [];
-			$keyswords = explode(',', $keyswords);
-		    foreach ($keyswords as $value) {
+			$keywords = explode(',', $keywords);
+		    foreach ($keywords as $value) {
 		    	$single_key = $this->Upload_model->get_specifix_keyword(['keyword' => rtrim(ltrim($value)) ]);
 		    	if(!empty($single_key)){
 		    		array_push($keys, $single_key[0]['key_id']);
@@ -193,8 +193,7 @@ class Upload extends CI_Controller {
 		echo json_encode($res);
 	}
 
-	public function delete_image()
-	{
+	public function delete_image(){
 		$action = $this->input->post('action');
 		if (isset($action) && $action == 'delete_image') {
 			$where = ['image_id' => $this->input->post('image_id')];
@@ -204,8 +203,7 @@ class Upload extends CI_Controller {
 		}
 	}
 
-	public function get_image()
-	{
+	public function get_image(){
 		$action = $this->input->post('action');
 		if (isset($action) && $action == 'get_image') {
 			$where = ['image_id' => $this->input->post('image_id')];
@@ -217,10 +215,10 @@ class Upload extends CI_Controller {
 		$action = $this->input->post('action');
 		if (isset($action) && $action == 'update_image') {
 			$where = ['image_id' => $this->input->post('image_id')];
-			$keyswords = $this->input->post('keys');
+			$keywords = $this->input->post('keys');
 			$keys = [];
-			$keyswords = explode(',', $keyswords);
-		    foreach ($keyswords as $value) {
+			$keywords = explode(',', $keywords);
+		    foreach ($keywords as $value) {
 		    	$single_key = $this->Upload_model->get_specifix_keyword(['keyword' => trim($value)]);
 		    	if(!empty($single_key)){
 		    		array_push($keys, $single_key[0]['key_id']);
@@ -424,7 +422,7 @@ class Upload extends CI_Controller {
 			$where = "";
 			$page = 1;
 			$title = $this->input->post('title');
-			$keyswords = $this->input->post('keys');
+			$keywords = $this->input->post('keys');
 			$layout = $this->input->post('layout');
 			if ($page == NULL) {
 				$page = 1;
@@ -435,11 +433,14 @@ class Upload extends CI_Controller {
 			}
 			if ($title != '') {
 				$where .= "title LIKE '%" . $title . "%'";
+				$this->session->set_userdata('title', $title);
 			}
-			if ($keyswords != '') {
-				$keyswords = explode(',', $keyswords);
-				$keyswords = array_unique($keyswords);
-			    foreach ($keyswords as $value) {
+			if ($keywords != '') {
+				
+				$keywords = explode(',', $keywords);
+				$keywords = array_unique($keywords);
+				$keys = [];
+			    foreach ($keywords as $value) {
 			    	$value = rtrim(ltrim($value));
 			    	$single_key = $this->Upload_model->get_specifix_keyword(['keyword' => $value]);
 			    	if(!empty($single_key)){
@@ -448,8 +449,11 @@ class Upload extends CI_Controller {
 			    		}else{
 				    		$where .= "keywords LIKE '%" . $single_key[0]['key_id'] . "%'";
 			    		}
+			    		array_push($keys, $single_key[0]['key_id']);
 			    	}
 			    }
+			    $keys = implode(',', $keys);
+			    $this->session->set_userdata('keywords',$keys);
 			}
 			if ($where == '') {
 				$where = 'image_id > 0';
