@@ -174,80 +174,10 @@ jQuery(function($) {
 				    data: formdata,
 				    processData: false,
 				    contentType: false,
-				    success: function (res) {
-				    	res = JSON.parse(res);
-				    	i = 0;
-				    	var keywords = $("#form-field-tags").val().split(",");
-				    	var keys = '';
-				    	for (var j = 0; j < keywords.length; j++) {
-				    		keys += `<span type="button" class="btn btn-white btn-yellow btn-sm">`+keywords[j]+`</span>`;
-				    	}
-				      	for ( ; i < res.data.length; i++ ) {
-					      	file = res.data[i];
-				      		$("#gallery-content #grid-view").append(`
-				      			<div class="col-xs-6 col-sm-4 col-md-3">
-                                    <div class="thumbnail search-thumbnail">
-                                        <span class="search-promotion label label-success arrowed-in arrowed-in-right">Sponsored</span>
-
-                                        <img class="media-object" alt="100%x200" style="height: 200px; width: 100%; display: block;" src="`+file.url+`" data-holder-rendered="true">
-                                        <div class="caption">
-                                            <h3 class="search-title">
-                                                `+file.title+`
-                                            </h3>
-                                            <p>
-                                                `+keys+`
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-				      			`);
-				      		$("#gallery-content #list-view").append(`
-				      			<div class="col-xs-12">
-					      			<div class="media search-media">
-	                                    <div class="media-left">
-	                                        <a href="#">
-	                                            <img class="media-object" alt="72x72" style="width: 72px; height: 72px;" src="`+file.url+`" data-holder-rendered="true">
-	                                        </a>
-	                                    </div>
-
-	                                    <div class="media-body">
-	                                        <div>
-	                                            <h4 class="media-heading">
-	                                                `+file.title+`
-	                                            </h4>
-	                                        </div>
-	                                        <p>
-	                                            `+keys+`
-	                                        </p>
-	                                    </div>
-	                                </div>
-	                            </div>
-	                            <div class="space"></div>
-				      			`);
-					      	$("#gallery-content #table-view table tbody").append(`
-				      			<tr>
-                                    <td>
-                                        <img class="media-object" alt="72x72" style="width: 72px; height: 72px;" src="`+file.url+`" data-holder-rendered="true">  
-                                    </td>
-                                    <td>`+file.title+`</td>
-                                    <td>`+keys+`</td>
-                                    <td>
-                                        <button class="btn btn-white btn-info btn-bold">
-                                            <i class="ace-icon fa fa-pencil-square-o bigger-120 blue"></i>
-                                            Sửa
-                                        </button>
-                                        <button class="btn btn-white btn-warning btn-bold">
-                                            <i class="ace-icon fa fa-trash-o bigger-120 orange"></i>
-                                            Xóa
-                                        </button>
-                                    </td>
-                                </tr>
-			      			`);
-					    }
-		      			$("#myTab a[href='#gallery-area']").click();
-		      			this_form.reset(function(event) {
-		      				
-		      			});
+				    success: function () {
+				    	reload_images( get_current_page() );
+				    	$("#myTab a[href='#gallery-area']").click();
+			      		this_form.reset();
 				    }
 				});
 				return false;
@@ -261,6 +191,7 @@ jQuery(function($) {
 		event.preventDefault();
 		delete_image($(this).attr('data-img-id'));
 		$(this).parents('.single-image').remove();
+		reload_images( get_current_page() );
 	});
 
 	$("#gallery-content").on('click', '.edit-img', function(event) {
@@ -280,6 +211,7 @@ jQuery(function($) {
 				keys : $("#edit_image_keys").val()
 			}, function() {
 				$("#edit-modal").modal('hide');
+				reload_images( get_current_page() );
 			}
 		);
 	});
@@ -325,7 +257,27 @@ jQuery(function($) {
 
 			}
 		);
-	}
+	};
+
+	var reload_images = function ($page = 1){
+		$.post(
+			$('base').attr('href') +"upload/reload_images", 
+			{
+				action: 'reload_images',
+				url : window.location.href,
+				page : $page
+			}, function(data) {
+				$("#gallery-content").html(data);
+			}
+		);
+	};
+
+	var get_current_page = function(){
+		var pathname = window.location.pathname;
+		pathname = pathname.split('/');
+		pathname = pathname.filter(function(v){return v!==''});
+		return pathname.length > 3 ? parseInt(pathname[3]) : 1;
+	};
 	// var maxHeight = 0;
 	// $("#gallery-content #grid-view").find('.single-image .thumbnail.search-thumbnail').each(function() {
 	// 	maxHeight = $(this).innerHeight() > maxHeight ? $(this).innerHeight() : maxHeight;

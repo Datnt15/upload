@@ -236,6 +236,7 @@
                                                 </table>
                                             </div>
                                             <!-- /Table view -->
+                                            <div class="clearfix"></div>
                                             <?php 
                                             
                                             
