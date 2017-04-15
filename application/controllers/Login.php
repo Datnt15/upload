@@ -12,9 +12,6 @@ class Login extends CI_Controller {
             $this->session->set_userdata("ci_nonce", substr(md5(microtime()),0,15));
         }
         $this->ci_nonce = $this->session->ci_nonce;
-        if ($this->session->is_logged_in) {
-            redirect('profile','refresh');
-        }
         // Load libraries
         $this->load->library('form_validation');
         
@@ -41,8 +38,7 @@ class Login extends CI_Controller {
         if (!$this->form_validation->run()){
             $data = [
                 'title'     => "Đăng nhập",
-                'ci_nonce'  => $this->ci_nonce,
-                'companies' => $this->UserModel->get_companies()
+                'ci_nonce'  => $this->ci_nonce
             ];
             $this->load->view('login', $data);
         }
