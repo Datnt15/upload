@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 15, 2017 at 10:19 AM
+-- Generation Time: Apr 15, 2017 at 10:52 AM
 -- Server version: 10.1.19-MariaDB
 -- PHP Version: 5.5.38
 
@@ -117,6 +117,69 @@ INSERT INTO `keywords` (`key_id`, `keyword`, `date_created`) VALUES
 (68, 'shark', '2017-04-15 03:58:30'),
 (69, 'eyes', '2017-04-15 04:03:11');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `message`
+--
+
+CREATE TABLE `message` (
+  `mess_id` int(11) NOT NULL,
+  `content` tinytext NOT NULL,
+  `from_id` int(11) NOT NULL,
+  `to_id` int(11) NOT NULL,
+  `is_read` varchar(10) NOT NULL DEFAULT 'no',
+  `type` varchar(15) NOT NULL DEFAULT 'text',
+  `date_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notification`
+--
+
+CREATE TABLE `notification` (
+  `noti_id` int(11) NOT NULL,
+  `content` varchar(255) NOT NULL,
+  `from_id` int(11) NOT NULL,
+  `to_id` int(11) NOT NULL,
+  `topic_id` int(11) NOT NULL,
+  `cource_id` int(11) NOT NULL,
+  `is_read` varchar(10) NOT NULL DEFAULT 'no',
+  `date_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+CREATE TABLE `user` (
+  `uid` int(11) NOT NULL,
+  `fullname` varchar(255) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `user_type` varchar(20) NOT NULL DEFAULT 'student',
+  `is_social_login` tinyint(4) NOT NULL DEFAULT '0',
+  `date_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_meta`
+--
+
+CREATE TABLE `user_meta` (
+  `meta_id` int(11) NOT NULL,
+  `meta_key` varchar(255) DEFAULT NULL,
+  `meta_value` text,
+  `uid` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Indexes for dumped tables
 --
@@ -134,6 +197,30 @@ ALTER TABLE `keywords`
   ADD PRIMARY KEY (`key_id`);
 
 --
+-- Indexes for table `message`
+--
+ALTER TABLE `message`
+  ADD PRIMARY KEY (`mess_id`);
+
+--
+-- Indexes for table `notification`
+--
+ALTER TABLE `notification`
+  ADD PRIMARY KEY (`noti_id`);
+
+--
+-- Indexes for table `user`
+--
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`uid`);
+
+--
+-- Indexes for table `user_meta`
+--
+ALTER TABLE `user_meta`
+  ADD PRIMARY KEY (`meta_id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -147,6 +234,26 @@ ALTER TABLE `images`
 --
 ALTER TABLE `keywords`
   MODIFY `key_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+--
+-- AUTO_INCREMENT for table `message`
+--
+ALTER TABLE `message`
+  MODIFY `mess_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `notification`
+--
+ALTER TABLE `notification`
+  MODIFY `noti_id` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `user`
+  MODIFY `uid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+--
+-- AUTO_INCREMENT for table `user_meta`
+--
+ALTER TABLE `user_meta`
+  MODIFY `meta_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=172;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

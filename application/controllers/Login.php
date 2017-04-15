@@ -62,51 +62,7 @@ class Login extends CI_Controller {
                 redirect('/login');
             }
         }
-
-        if (isset($_POST['new_uid'])) {
-            $company_id = 0;
-            $uid = $this->input->post('new_uid');
-            $this->UserModel->update_user_data(
-                ['user_type' => $this->input->post('user_type')],
-                ['uid' => $uid]
-            );
-            if (isset($_POST['company_name'])) {
-                $company_id = $this->add_company([
-                    'company_name'          => $this->input->post('company_name'),
-                    'company_address'       => $this->input->post('company_address'),
-                    'company_domain'        => $this->input->post('company_domain'),
-                    'company_phone'         => $this->input->post('company_phone'),
-                    'company_date_created'  => $this->input->post('company_date_created')
-                ]);
-            }
-            elseif (isset($_POST['company_id'])) {
-                $company_id = $_POST['company_id'];
-            }
-            if ($company_id > 0) {
-                $this->UserModel->add_user_meta([
-                    'uid'       => $uid ,
-                    'meta_key'  => 'company_id',
-                    'meta_value'=> $company_id
-                ]);
-            }
-            
-            if (isset($_POST['student_id'])) {
-                $this->UserModel->add_user_meta([
-                    'uid'       => $uid ,
-                    'meta_key'  => 'student_id',
-                    'meta_value'=> $_POST['student_id']
-                ]);
-            }
-
-            // Cài đặt thông báo
-            $this->session->set_flashdata('type', 'success');
-            $this->session->set_flashdata('msg', 'Đăng ký và cập nhật thông tin thành công!');
-            $this->session->set_userdata('is_logged_in', true);
-            $this->session->set_userdata('uid', $uid);
-            $this->session->set_userdata('user_type', $this->input->post('user_type'));
-            redirect('profile');
-                
-        }
+        
     	
     }
 
@@ -159,7 +115,7 @@ class Login extends CI_Controller {
                 $new_uid = $this->UserModel->add_user([
                     'username'  => $this->input->post('user_id'),
                     'fullname'  => $this->input->post('fullname'),
-                    'password'  => md5('facebook_login'.SALT),
+                    'password'  => md5('social_login'.SALT),
                     'email'     => $this->input->post('email'),
                     'user_type' => 'student',
                     'is_social_login' => 1
@@ -174,17 +130,6 @@ class Login extends CI_Controller {
             }
             echo json_encode($res);
         }
-    }
-
-    /**
-     * Thêm thông tin công ty đối tác
-     * @param [array] $data [mảng dữ liệu]
-     */
-    private function add_company($data = null){
-        if ($data == null) {
-            return false;
-        }
-        return $this->UserModel->add_company($data);
     }
 
 }
