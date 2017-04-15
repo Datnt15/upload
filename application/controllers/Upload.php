@@ -10,21 +10,17 @@ class Upload extends CI_Controller {
 		$this->load->library('pagination');
 	}
 
-	// function _remap($param) {
- //        $this->index($param);
- //    }
-
 	public function index(){
 		if ($this->session->has_userdata('title')) {
-			$this->session->set_userdata('title', '');
+			$this->session->unset_userdata('title');
 		}
 
 		if ($this->session->has_userdata('keyids')) {
-			$this->session->set_userdata('keyids', '');
+			$this->session->unset_userdata('keyids');
 		}
 
 		if ($this->session->has_userdata('keywords')) {
-			$this->session->set_userdata('keywords', '');
+			$this->session->unset_userdata('keywords');
 		}
 		
 		$data = [
@@ -384,10 +380,10 @@ class Upload extends CI_Controller {
             <?php 
             
             
-            $config['base_url'] = base_url() . "upload/page/";
-            $config['total_rows'] = $total;
-            $config['per_page'] = PER_PAGE;
-            $config['num_links'] = 3;
+            $config['base_url'] 		= base_url() . "upload/page/";
+            $config['total_rows'] 		= $total;
+            $config['per_page'] 		= PER_PAGE;
+            $config['num_links'] 		= 3;
             $config['full_tag_open']    = '<ul class="pagination pull-right">';
             $config['full_tag_close']   = '</ul>';
             $config['first_link']       = 'Trang đầu';
@@ -426,16 +422,16 @@ class Upload extends CI_Controller {
 		if (isset($action) && $action == 'search_by_title') {
 			$where = "";
 			$page = 1;
-			$title = $this->input->post('title');
-			$keywords = $this->input->post('keys');
-			$layout = $this->input->post('layout');
-			if ($page == NULL) {
-				$page = 1;
+			if (!$this->session->has_userdata('title') && !$this->session->has_userdata('keyids')) {
+				$page = $this->input->post('page');
 			}
 
 			if ($page != 0 ) {
 				$page = $page <= 0 ? 1 : $page;
 			}
+			$title = $this->input->post('title');
+			$keywords = $this->input->post('keys');
+			$layout = $this->input->post('layout');
 			if ($title != '') {
 				$where .= "title LIKE '%" . $title . "%'";
 				$this->session->set_userdata('title', $title);
@@ -465,6 +461,18 @@ class Upload extends CI_Controller {
 			}
 			self::render_images_content($this->Upload_model->get_images($where, ($page-1)*PER_PAGE),
 			$this->Upload_model->count_all_images_available($where), $layout);
+		}
+	}
+
+
+	public function remove_session(){
+		$action = $this->input->post('action');
+		if (isset($action) && $action == 'remove_title_session') {
+			$this->session->unset_userdata('title');
+		}
+		if (isset($action) && $action == 'remove_key_session') {
+			$this->session->unset_userdata('keyids');
+			$this->session->unset_userdata('keywords');
 		}
 	}
 

@@ -3,6 +3,8 @@ jQuery(function($) {
 	$('[data-rel=tooltip]').tooltip({container:'body'});
 	$('[data-rel=popover]').popover({container:'body'});
 	var drop_files = [];
+
+	// Cài đặt file input (Drag/Drop files)
 	$('#id-input-file-3').ace_file_input({
 		style: 'well',
 		btn_choose: 'Drop images here or click to choose',
@@ -150,7 +152,7 @@ jQuery(function($) {
 		autosize($('#edit_image_keys'));
 	}
 
-	// Submit form
+	// Submit form khi upload ảnh sử dụng ajax
 	$("#upload-form").submit(function() {
 		var this_form = $(this);
 		var input = document.getElementById("id-input-file-3"), formdata = false;
@@ -203,7 +205,7 @@ jQuery(function($) {
 		return false;
 	});
 
-
+	// Xóa ảnh
 	$("#gallery-content").on('click', '.delete-img', function(event) {
 		event.preventDefault();
 		delete_image($(this).attr('data-img-id'));
@@ -211,6 +213,7 @@ jQuery(function($) {
 		reload_images( get_current_page() );
 	});
 
+	// Popup form sửa ảnh
 	$("#gallery-content").on('click', '.edit-img', function(event) {
 		event.preventDefault();
 		load_image_info($(this).attr('data-img-id'));
@@ -218,30 +221,48 @@ jQuery(function($) {
 	});
 
 
+	// Tìm kiếm theo tiêu đề
 	$("#header-search-title").keyup(function(e) {
+	    if ($(this).val() == '') {
+	    	remove_session('remove_title_session');
+	    }
 		if(e.keyCode == 13){
-			search_by_title( $(this).val(), $("#search-tags").val() );
+			search_by_title( $("#header-search-title").val(), $("#search-tags").val() );
 	    }
 	});
 
 
 	$("#header-search-title").change(function() {
-		search_by_title( $(this).val(), $("#search-tags").val() );
+		if ($(this).val() == '') {
+	    	remove_session('remove_title_session');
+	    }
+		search_by_title( $("#header-search-title").val(), $("#search-tags").val() );
 	});
 
 	$("#header-search-title").on('typeahead:selected', function(evt, item) {
-		search_by_title( $(this).val(), $("#search-tags").val() );
+		if ($(this).val() == '') {
+	    	remove_session('remove_title_session');
+	    }
+		search_by_title( $("#header-search-title").val(), $("#search-tags").val() );
 	});
 
+	// Tìm kiếm theo từ khóa
 	$("#search-tags").on('added',function() {
+		if ($(this).val() == '') {
+	    	remove_session('remove_key_session');
+	    }
 		search_by_title( $("#header-search-title").val(), $(this).val() );
 	});
 
 
 	$("#search-tags").on('removed',function() {
+		if ($(this).val() == '') {
+	    	remove_session('remove_key_session');
+	    }
 		search_by_title( $("#header-search-title").val(), $(this).val() );
 	});
 
+	// Tìm kiếm khi bấm chọn từ khóa từ kết quả
 	$("#gallery-area").on('click', 'span.btn.btn-white.btn-yellow.btn-sm', function(event) {
 		$("#search-tags").data('tag').add( $(this).text() );
 		var keys_now = $("#search-tags").val();
@@ -253,7 +274,7 @@ jQuery(function($) {
 		search_by_title( $("#header-search-title").val(), $("#search-tags").val() );
 	});
 
-
+	// Lưu thông tin của ảnh và cập nhật trên giao diện
 	$("#save_change_image").click(function(){
 		$.post(
 			$('base').attr('href') +"upload/update_image", 
@@ -264,11 +285,35 @@ jQuery(function($) {
 				keys : $("#edit_image_keys").val()
 			}, function() {
 				$("#edit-modal").modal('hide');
-				reload_images( get_current_page() );
+
+				var image_id = $("#edit_image_id").val(),
+				image_title = $("#edit_image_title").val()
+				grid_image = $(".single-image span[data-img-id='"+image_id+"']:nth-child(1)").parent(),
+				list_image = $(".single-image .media-body button[data-img-id='"+image_id+"']:nth-child(1)").parent().parent(),
+				table_image = $(".single-image td button[data-img-id='"+image_id+"']:nth-child(1)").parent().parent(),
+				keywords = $("#edit_image_keys").val().split(','),
+				key_string = '';
+
+				for (var i = 0; i < keywords.length; i++) {
+					key_string += '<span type="button" class="btn btn-white btn-yellow btn-sm">'+keywords[i]+'</span>&nbsp';
+				}
+				// cập nhật grid view
+				grid_image.find('.caption h3.search-title').text(image_title);
+				grid_image.find('.caption p').html(key_string);
+
+				// Cập nhật list view
+				list_image.find('.media-heading').text(image_title);
+				list_image.parent().find('p').html(key_string);
+
+				// Cập nhật table view
+				table_image.find("td:nth-child(2)").text(image_title);
+				table_image.find("td:nth-child(3)").html(key_string);
+
 			}
 		);
 	});
 
+	// Hàm xử lý xóa ảnh
 	var delete_image = function(id){
 		$.post(
 			$('base').attr('href') +"upload/delete_image", 
@@ -282,6 +327,7 @@ jQuery(function($) {
 	};
 
 
+	// Hàm xử lý lấy thông tin ảnh và điền vào modal
 	var load_image_info = function(id){
 		$.post(
 			$('base').attr('href') +"upload/get_image", 
@@ -312,6 +358,8 @@ jQuery(function($) {
 		);
 	};
 
+
+	// Load lại các ảnh
 	var reload_images = function ($page = 1){
 		$.post(
 			$('base').attr('href') +"upload/reload_images", 
@@ -325,6 +373,7 @@ jQuery(function($) {
 		);
 	};
 
+	// Lấy phân trang hiện tại (1, 2, 3)
 	var get_current_page = function(){
 		var pathname = window.location.pathname;
 		pathname = pathname.split('/');
@@ -332,10 +381,13 @@ jQuery(function($) {
 		return pathname.length > 3 ? parseInt(pathname[3]) : 1;
 	};
 
+	// Lấy layout hiển thị hiện tại
 	var get_current_layout = function(){
 		return $(".search-area ul#toggle-layout-format li.active a").attr('href');
 	};
 
+
+	// Tìm kiếm
 	var search_by_title = function($title, $keys){
 		$.post(
 			$('base').attr('href') +"upload/search_by_title", 
@@ -343,11 +395,23 @@ jQuery(function($) {
 				action: 'search_by_title',
 				title : $title,
 				keys : $keys,
+				page : get_current_page(),
 				layout: get_current_layout()
 			}, function(data) {
 				$("#gallery-content").html(data);
 			}
 		);
 	}
+
+	// Xóa session
+	var remove_session = function(session_name){
+		$.post(
+			$('base').attr('href') +"upload/remove_session", 
+			{
+				action: session_name
+			}, function() {
+			}
+		);
+	};
 
 });
