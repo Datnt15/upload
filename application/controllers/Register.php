@@ -46,8 +46,7 @@ class Register extends CI_Controller {
              
             $data = [
                 'title'     => "Đăng ký",
-                'ci_nonce'  => $this->ci_nonce,
-                'companies' => $this->UserModel->get_companies()
+                'ci_nonce'  => $this->ci_nonce
             ];
             $this->load->view('register', $data);
         }
@@ -60,35 +59,6 @@ class Register extends CI_Controller {
             ];
             $uid = $this->UserModel->add_user($user_content);
             if ($uid) {
-                $company_id = 0;
-                if (isset($_POST['company_name'])) {
-                    $company_id = $this->add_company([
-                        'company_name'          => $this->input->post('company_name'),
-                        'company_address'       => $this->input->post('company_address'),
-                        'company_domain'        => $this->input->post('company_domain'),
-                        'company_phone'         => $this->input->post('company_phone'),
-                        'company_date_created'  => $this->input->post('company_date_created')
-                    ]);
-                }
-                elseif (isset($_POST['company_id'])) {
-                    $company_id = $_POST['company_id'];
-                }
-                if ($company_id) {
-                    $this->UserModel->add_user_meta([
-                        'uid'       => $uid ,
-                        'meta_key'  => 'company_id',
-                        'meta_value'=> $company_id
-                    ]);
-                }
-                
-                if (isset($_POST['student_id'])) {
-                    $this->UserModel->add_user_meta([
-                        'uid'       => $uid ,
-                        'meta_key'  => 'student_id',
-                        'meta_value'=> $_POST['student_id']
-                    ]);
-                }
-
                 // Cài đặt thông báo
                 $this->session->set_flashdata('type', 'success');
                 $this->session->set_flashdata('msg', 'Đăng ký thành công, vui lòng đăng nhập');
@@ -112,17 +82,6 @@ class Register extends CI_Controller {
         return $this->UserModel->add_user($data);
     }
 
-    /**
-     * Thêm thông tin công ty đối tác
-     * @param [array] $data [mảng dữ liệu]
-     */
-    private function add_company($data = null){
-        if ($data == null) {
-            return false;
-        }
-        return $this->UserModel->add_company($data);
-    }
-
     // Kiểm tra tính hợp lệ của access token
     public function is_match_access_token($str) {
         $flag = true;
@@ -132,12 +91,6 @@ class Register extends CI_Controller {
         $this->session->set_userdata("ci_nonce", substr(md5(microtime()),0,15));
         return $flag;
     }
-
    
-
-    // Kiểm tra tính hợp lệ của password
-    public function is_valid_school_email($str){
-        return true;
-    }
 }
 ?>

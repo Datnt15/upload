@@ -11,15 +11,13 @@
 
 	<!-- bootstrap & fontawesome -->
 	<link rel="stylesheet" href="assets/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="assets/font-awesome/4.5.0/css/font-awesome.min.css" />
+	<link rel="stylesheet" href="assets/css/font-awesome.min.css" />
 
 	<!-- text fonts -->
 	<link rel="stylesheet" href="assets/css/fonts.googleapis.com.css" />
 	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 	<!-- ace styles -->
 	<link rel="stylesheet" href="assets/css/ace.min.css" />
-	<link rel="stylesheet" href="assets/css/bootstrap-datepicker3.min.css" />
-	<link rel="stylesheet" href="assets/css/bootstrap-editable.min.css" />
 
 	<!--[if lte IE 9]>
 		<link rel="stylesheet" href="assets/css/ace-part2.min.css" />
@@ -85,43 +83,14 @@
 													</span>
 												</label>
 
-												<label class="block clearfix">
-													<select name="user_type" id="user_typer" required class="form-control">
-									                    <option value="<?= STUDENT_USER_TYPE; ?>" selected>
-									                        <?= strtoupper(str_replace('_', " ", STUDENT_USER_TYPE)); ?>
-									                    </option>
-									                    <option value="<?= BUSSINESS_USER_TYPE; ?>">
-									                        <?= strtoupper(str_replace('_', " ", BUSSINESS_USER_TYPE)); ?>
-									                    </option>
-									                    <option value="<?= BUSSINESS_STAFF_USER_TYPE; ?>">
-									                        <?= strtoupper(str_replace('_', " ", BUSSINESS_STAFF_USER_TYPE)); ?>
-									                    </option>
-									                    <option value="<?= INSTRUCTOR_TEACHER_USER_TYPE; ?>">
-									                        <?= strtoupper(str_replace('_', " ", INSTRUCTOR_TEACHER_USER_TYPE)); ?>
-									                    </option>
-									                    <option value="<?= CURATOR_TEACHER_USER_TYPE; ?>">
-									                        <?= strtoupper(str_replace('_', " ", CURATOR_TEACHER_USER_TYPE)); ?>
-									                    </option>
-									                </select>
-												</label>
-												<div class="user_type_meta">
-													
-													<label class="block clearfix">
-														<span class="block input-icon input-icon-left">
-															<input type="text" name="student_id" id="student_id" class="form-control" placeholder="Mã số sinh viên">
-															<i class="ace-icon fa fa-graduation-cap"></i>
-														</span>
-													</label>
-													
-												</div>
                 
-												<!--< label class="block">
+												<label class="block">
 													<input type="checkbox" class="ace" />
 													<span class="lbl">
 														I accept the
 														<a href="#">User Agreement</a>
 													</span>
-												</label> -->
+												</label> 
 												<div class="clearfix center">
 													<input type="hidden" name="access_token" value="<?= $ci_nonce; ?>">
 													<button type="submit" class="form-control btn-sm btn btn-success">
@@ -150,7 +119,7 @@
 
 	<!--[if !IE]> -->
 	<script src="assets/js/jquery-2.1.4.min.js"></script>
-	<script src="assets/js/bootstrap-datepicker.min.js"></script>
+	<script src="assets/js/bootstrap.min.js"></script>
 
 
 	<!-- <![endif]-->
@@ -160,114 +129,6 @@
 <![endif]-->
 	<script type="text/javascript">
 		if('ontouchstart' in document.documentElement) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
-	</script>
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPMTQLm7omfoGI6tpH2AtNrL-_5aBdLsE&libraries=places"
-        async defer></script>
-    <script type="text/javascript">
-    </script>
-	<script type="text/javascript">
-    	function initAutoComplete(input){
-    		var autocomplete = new google.maps.places.Autocomplete(input);
-    	}
-		jQuery(function($) {
-			$("#user_typer").change(function() {
-				$(".user_type_meta").slideUp(400);
-				var user_type = $(this).val();
-				var meta = '';
-				switch (user_type){
-					case "<?php echo STUDENT_USER_TYPE;?>":
-						meta = '<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-							'<input type="text" name="student_id" id="student_id" class="form-control" placeholder="Mã số sinh viên">'+
-							'<i class="ace-icon fa fa-graduation-cap"></i></span></label>';
-						break;
-					case "<?php echo BUSSINESS_USER_TYPE;?>":
-					<?php if (count($companies)): ?>
-						meta = '<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-							'<select class="form-control" name="company_id" id="company_id">'+
-							<?php foreach ($companies as $company) {
-								echo "'<option value=\'".$company['company_id']."\'>".$company['company_name']."</option>'+";
-							}?>
-							'<option value="other">Công ty khác</option></select>';
-						break;
-					<?php else: ?>
-						meta = '<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-						'<input type="text" name="company_name" id="company_name" class="form-control" placeholder="Tên công ty">'+
-						'<i class="ace-icon fa fa-building-o"></i></span></label>'+
-						'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-						'<input type="text" name="company_domain" id="company_domain" class="form-control" placeholder="Trang web công ty">'+
-						'<i class="ace-icon fa fa-globe"></i></span></label>'+
-						'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-						'<input type="text" name="company_phone" id="company_phone" class="form-control" placeholder="Số máy công ty">'+
-						'<i class="ace-icon fa fa-phone"></i></span></label>'+
-						'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-						'<input type="text" name="company_date_created" id="company_date_created" class="form-control" placeholder="Ngày thành lập">'+
-						'<i class="ace-icon fa fa-calendar-o"></i></span></label>'+
-						'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-						'<input type="text" name="company_address" id="company_address" class="form-control" placeholder="Địa chỉ công ty">'+
-						'<i class="ace-icon fa fa-map-marker "></i></span></label>';
-						break;
-					<?php endif; ?>
-					case "<?php echo BUSSINESS_STAFF_USER_TYPE;?>":
-					<?php if (count($companies)): ?>
-						meta = '<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-							'<select class="form-control" name="company_id" id="company_id">'+
-							<?php foreach ($companies as $company) {
-								echo "'<option value=\'".$company['company_id']."\'>".$company['company_name']."</option>'+";
-							}?>
-							'<option value="other">Công ty khác</option></select>';
-						break;
-					<?php else: ?>
-						meta = '<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-						'<input type="text" name="company_name" id="company_name" class="form-control" placeholder="Tên công ty">'+
-						'<i class="ace-icon fa fa-building-o"></i></span></label>'+
-						'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-						'<input type="text" name="company_domain" id="company_domain" class="form-control" placeholder="Trang web công ty">'+
-						'<i class="ace-icon fa fa-globe"></i></span></label>'+
-						'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-						'<input type="text" name="company_phone" id="company_phone" class="form-control" placeholder="Số máy công ty">'+
-						'<i class="ace-icon fa fa-phone"></i></span></label>'+
-						'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-						'<input type="text" name="company_date_created" id="company_date_created" class="form-control" placeholder="Ngày thành lập">'+
-						'<i class="ace-icon fa fa-calendar-o"></i></span></label>'+
-						'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-						'<input type="text" name="company_address" id="company_address" class="form-control" placeholder="Địa chỉ công ty">'+
-						'<i class="ace-icon fa fa-map-marker "></i></span></label>';
-						break;
-					<?php endif; ?>
-					default:
-						break;
-				}
-				if (meta != '') {
-					$(".user_type_meta").slideDown(400).html(meta);				
-				}
-				$("#company_date_created").datepicker({format: 'yyyy-mm-dd'});
-				initAutoComplete( document.getElementById('company_address') );
-
-			});
-			$('.user_type_meta').on("change", "#company_id", function(){
-				if ($(this).val() == 'other' ) {
-					$(".user_type_meta").slideUp(400);
-					$(".user_type_meta").slideDown(400).html('<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-						'<input type="text" name="company_name" id="company_name" class="form-control" placeholder="Tên công ty">'+
-						'<i class="ace-icon fa fa-building-o"></i></span></label>'+
-						'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-						'<input type="text" name="company_domain" id="company_domain" class="form-control" placeholder="Trang web công ty">'+
-						'<i class="ace-icon fa fa-globe"></i></span></label>'+
-						'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-						'<input type="text" name="company_phone" id="company_phone" class="form-control" placeholder="Số máy công ty">'+
-						'<i class="ace-icon fa fa-phone"></i></span></label>'+
-						'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-						'<input type="text" name="company_date_created" id="company_date_created" class="form-control" placeholder="Ngày thành lập">'+
-						'<i class="ace-icon fa fa-calendar-o"></i></span></label>'+
-						'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-						'<input type="text" name="company_address" id="company_address" class="form-control" placeholder="Địa chỉ công ty">'+
-						'<i class="ace-icon fa fa-map-marker "></i></span></label>'
-					);
-					$("#company_date_created").datepicker({format: 'yyyy-mm-dd'});
-					initAutoComplete( document.getElementById('company_address') );
-				}
-			});
-		});
 	</script>
 </body>
 </html>
