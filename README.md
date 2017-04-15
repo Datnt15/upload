@@ -1,2 +1,2 @@
-# project2
-project 2 inpg 12 sourse code 
+# Module Upload và quản lý ảnh
+Sử dụng Framework Codeignter 
