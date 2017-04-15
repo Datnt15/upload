@@ -83,9 +83,28 @@ defined('EXIT_USER_INPUT')     OR define('EXIT_USER_INPUT', 7); // invalid user 
 defined('EXIT_DATABASE')       OR define('EXIT_DATABASE', 8); // database error
 defined('EXIT__AUTO_MIN')      OR define('EXIT__AUTO_MIN', 9); // lowest automatically-assigned error code
 defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest automatically-assigned error code
-define('ASSET_FOLDER', 'http://localhost/upload/assets/'); //link to assets folder
+define('USER_TABLE', 'user'); // Thông tin người dùng cơ bản dùng cho login và phân loại người dùng
+define('USER_META_TABLE', 'user_meta'); // Lưu thông tin phụ của người dùng
+define('NOTIFIATION_TABLE', 'notification'); // Lưu các thông báo mới 
+define('MESSAGE_TABLE', 'message'); // Lưu tin nhắn giữa các user trên hệ thống
+
+
+// ================ USER TYPE =====================
+define('STUDENT_USER_TYPE', 'student');
+define('ADMIN_USER_TYPE', 'admin');
+define('BUSSINESS_USER_TYPE', 'business');
+define('BUSSINESS_STAFF_USER_TYPE', 'business_staff');
+define('INSTRUCTOR_TEACHER_USER_TYPE', 'instructor_teacher');
+define('CURATOR_TEACHER_USER_TYPE', 'curator_teacher');
 
 //================== Pagination ====================
 define('PER_PAGE', 8);
 
 // ================= Sant to scrypt =================
+
+define('SALT', 'uploadimage');
+
+
+// ================= Avatar mặc định =================
+
+define('DEFAULT_AVATAR', 'assets/img/user.png');

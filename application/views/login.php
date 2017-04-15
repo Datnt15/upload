@@ -261,7 +261,7 @@
 						      				if (data.type == 'login_success') {
 						      					window.location = $('base').attr('href')+'/profile/';
 						      				}else{
-						      					styling_after_login_with_social(data.new_uid);
+						      					alert("Lỗi ahihi");
 						      				}
 
 						      			});
@@ -308,7 +308,7 @@
 			      				if (data.type == 'login_success') {
 			      					window.location = $('base').attr('href')+'/profile/';
 			      				}else{
-			      					styling_after_login_with_social(data.new_uid);
+			      					alert("Lỗi ahihi");
 			      				}
 
 			      			});
@@ -317,157 +317,7 @@
 				});
 			});
 
-			function styling_after_login_with_social($uid){
-				var div = `
-					<label class="block clearfix">Chọn kiểu người dùng: </label>
-					<label class="block clearfix">
-						<select name="user_type" id="user_typer" required class="form-control">
-		                    <option value="<?= STUDENT_USER_TYPE; ?>" selected>
-		                        <?= strtoupper(str_replace('_', " ", STUDENT_USER_TYPE)); ?>
-		                    </option>
-		                    <option value="<?= BUSSINESS_USER_TYPE; ?>">
-		                        <?= strtoupper(str_replace('_', " ", BUSSINESS_USER_TYPE)); ?>
-		                    </option>
-		                    <option value="<?= BUSSINESS_STAFF_USER_TYPE; ?>">
-		                        <?= strtoupper(str_replace('_', " ", BUSSINESS_STAFF_USER_TYPE)); ?>
-		                    </option>
-		                    <option value="<?= INSTRUCTOR_TEACHER_USER_TYPE; ?>">
-		                        <?= strtoupper(str_replace('_', " ", INSTRUCTOR_TEACHER_USER_TYPE)); ?>
-		                    </option>
-		                    <option value="<?= CURATOR_TEACHER_USER_TYPE; ?>">
-		                        <?= strtoupper(str_replace('_', " ", CURATOR_TEACHER_USER_TYPE)); ?>
-		                    </option>
-		                </select>
-					</label>
-					<div class="user_type_meta">
-						
-						<label class="block clearfix">
-							<span class="block input-icon input-icon-left">
-								<i class="ace-icon fa fa-graduation-cap"></i>
-								<input type="text" name="student_id" id="student_id" class="form-control" placeholder="Mã số sinh viên">
-							</span>
-						</label>
-						
-					</div>
-					<label class="block clearfix">
-						<button type="submit" name="new_uid" class="pull-right btn btn-sm btn-primary" value="` +$uid+ `">
-							<span class="bigger-110">Lưu thông tin</span>
-						</button>
-					</label>
-				`;
-				$('form#login-form fieldset').slideUp(400);
-				$(".header.blue").text('Đăng ký thành công, vui lòng điền thêm thông tin phụ!');
-				$('.widget-body .toolbar').remove();
-				$('.widget-body .social-or-login').remove();
-				$('.widget-body .social-login').remove();
-				$('form#login-form fieldset').html(div).slideDown(400);
-			}
+			
 		</script> 
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPMTQLm7omfoGI6tpH2AtNrL-_5aBdLsE&libraries=places" async defer></script>
-   		
-		<script type="text/javascript">
-	    	function initAutoComplete(input){
-	    		var autocomplete = new google.maps.places.Autocomplete(input);
-	    	}
-			jQuery(function($) {
-				$("#login-box").on('change', '#user_typer',function() {
-					$("#login-box .user_type_meta").slideUp(400);
-					var user_type = $(this).val();
-					var meta = '';
-					switch (user_type){
-						case "<?php echo STUDENT_USER_TYPE;?>":
-							meta = '<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-								'<input type="text" name="student_id" id="student_id" class="form-control" placeholder="Mã số sinh viên">'+
-								'<i class="ace-icon fa fa-graduation-cap"></i></span></label>';
-							break;
-						case "<?php echo BUSSINESS_USER_TYPE;?>":
-						<?php if (count($companies)): ?>
-							meta = '<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-								'<select class="form-control" name="company_id" id="company_id">'+
-								<?php foreach ($companies as $company) {
-									echo "'<option value=\'".$company['company_id']."\'>".$company['company_name']."</option>'+";
-								}?>
-								'<option value="other">Công ty khác</option></select>';
-							break;
-						<?php else: ?>
-							meta = '<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-							'<input type="text" name="company_name" id="company_name" class="form-control" placeholder="Tên công ty">'+
-							'<i class="ace-icon fa fa-building-o"></i></span></label>'+
-							'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-							'<input type="text" name="company_domain" id="company_domain" class="form-control" placeholder="Trang web công ty">'+
-							'<i class="ace-icon fa fa-globe"></i></span></label>'+
-							'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-							'<input type="text" name="company_phone" id="company_phone" class="form-control" placeholder="Số máy công ty">'+
-							'<i class="ace-icon fa fa-phone"></i></span></label>'+
-							'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-							'<input type="text" name="company_date_created" id="company_date_created" class="form-control" placeholder="Ngày thành lập">'+
-							'<i class="ace-icon fa fa-calendar-o"></i></span></label>'+
-							'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-							'<input type="text" name="company_address" id="company_address" class="form-control" placeholder="Địa chỉ công ty">'+
-							'<i class="ace-icon fa fa-map-marker "></i></span></label>';
-							break;
-						<?php endif; ?>
-						case "<?php echo BUSSINESS_STAFF_USER_TYPE;?>":
-						<?php if (count($companies)): ?>
-							meta = '<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-								'<select class="form-control" name="company_id" id="company_id">'+
-								<?php foreach ($companies as $company) {
-									echo "'<option value=\'".$company['company_id']."\'>".$company['company_name']."</option>'+";
-								}?>
-								'<option value="other">Công ty khác</option></select>';
-							break;
-						<?php else: ?>
-							meta = '<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-							'<input type="text" name="company_name" id="company_name" class="form-control" placeholder="Tên công ty">'+
-							'<i class="ace-icon fa fa-building-o"></i></span></label>'+
-							'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-							'<input type="text" name="company_domain" id="company_domain" class="form-control" placeholder="Trang web công ty">'+
-							'<i class="ace-icon fa fa-globe"></i></span></label>'+
-							'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-							'<input type="text" name="company_phone" id="company_phone" class="form-control" placeholder="Số máy công ty">'+
-							'<i class="ace-icon fa fa-phone"></i></span></label>'+
-							'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-							'<input type="text" name="company_date_created" id="company_date_created" class="form-control" placeholder="Ngày thành lập">'+
-							'<i class="ace-icon fa fa-calendar-o"></i></span></label>'+
-							'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-							'<input type="text" name="company_address" id="company_address" class="form-control" placeholder="Địa chỉ công ty">'+
-							'<i class="ace-icon fa fa-map-marker "></i></span></label>';
-							break;
-						<?php endif; ?>
-						default:
-							break;
-					}
-					if (meta != '') {
-						$(".user_type_meta").slideDown(400).html(meta);				
-					}
-					$("#company_date_created").datepicker({format: 'yyyy-mm-dd'});
-					initAutoComplete( document.getElementById('company_address') );
-
-				});
-				$('#login-box').on("change", "#company_id", function(){
-					if ($(this).val() == 'other' ) {
-						$(".user_type_meta").slideUp(400);
-						$(".user_type_meta").slideDown(400).html('<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-							'<input type="text" name="company_name" id="company_name" class="form-control" placeholder="Tên công ty">'+
-							'<i class="ace-icon fa fa-building-o"></i></span></label>'+
-							'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-							'<input type="text" name="company_domain" id="company_domain" class="form-control" placeholder="Trang web công ty">'+
-							'<i class="ace-icon fa fa-globe"></i></span></label>'+
-							'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-							'<input type="text" name="company_phone" id="company_phone" class="form-control" placeholder="Số máy công ty">'+
-							'<i class="ace-icon fa fa-phone"></i></span></label>'+
-							'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-							'<input type="text" name="company_date_created" id="company_date_created" class="form-control" placeholder="Ngày thành lập">'+
-							'<i class="ace-icon fa fa-calendar-o"></i></span></label>'+
-							'<label class="block clearfix"><span class="block input-icon input-icon-left">'+
-							'<input type="text" name="company_address" id="company_address" class="form-control" placeholder="Địa chỉ công ty">'+
-							'<i class="ace-icon fa fa-map-marker "></i></span></label>'
-						);
-						$("#company_date_created").datepicker({format: 'yyyy-mm-dd'});
-						initAutoComplete( document.getElementById('company_address') );
-					}
-				});
-			});
-		</script>
 	</body>
 </html>
